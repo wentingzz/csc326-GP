@@ -511,7 +511,7 @@ public class OfficeVisit extends DomainObject<OfficeVisit> {
      */
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "patient_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
     private User                     patient;
 
     /**
@@ -519,7 +519,7 @@ public class OfficeVisit extends DomainObject<OfficeVisit> {
      */
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "hcp_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
     private User                     hcp;
 
     /**
@@ -554,7 +554,7 @@ public class OfficeVisit extends DomainObject<OfficeVisit> {
      */
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "hospital_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "hospital_id", columnDefinition = "varchar(100)" )
     private Hospital                 hospital;
 
     /**

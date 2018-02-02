@@ -242,7 +242,7 @@ public class BasicHealthMetrics extends DomainObject<BasicHealthMetrics> {
      */
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "patient_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
     private User                   patient;
 
     /**
@@ -250,7 +250,7 @@ public class BasicHealthMetrics extends DomainObject<BasicHealthMetrics> {
      */
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "hcp_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "hcp_id", columnDefinition = "varchar(100)" )
     private User                   hcp;
 
     /**

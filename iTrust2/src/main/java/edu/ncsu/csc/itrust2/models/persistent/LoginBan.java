@@ -33,7 +33,7 @@ public class LoginBan extends DomainObject<LoginBan> {
     private String   ip;
 
     @ManyToOne
-    @JoinColumn ( name = "user_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "user_id", columnDefinition = "varchar(100)" )
     private User     user;
 
     private Calendar time;
@@ -117,7 +117,7 @@ public class LoginBan extends DomainObject<LoginBan> {
 
     /**
      * Retrieves all LoginBans for the criteria provided.
-     * 
+     *
      * @param A
      *            List of Criterion to search by to constrain what is retrieved
      * @return The list of all matching LoginBans

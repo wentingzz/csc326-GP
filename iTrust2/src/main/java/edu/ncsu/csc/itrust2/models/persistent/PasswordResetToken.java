@@ -34,7 +34,7 @@ public class PasswordResetToken extends DomainObject<PasswordResetToken> {
 
     @NotNull
     @ManyToOne
-    @JoinColumn ( name = "user_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "user_id", columnDefinition = "varchar(100)" )
     private User                     user;
     @NotNull
     private long                     creationTime;
