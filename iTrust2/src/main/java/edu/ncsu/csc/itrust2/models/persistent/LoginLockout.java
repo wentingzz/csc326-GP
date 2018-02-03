@@ -35,7 +35,7 @@ public class LoginLockout extends DomainObject<LoginLockout> {
     private String   ip;
 
     @ManyToOne
-    @JoinColumn ( name = "user_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "user_id", columnDefinition = "varchar(100)" )
     private User     user;
 
     private Calendar time;
@@ -148,7 +148,7 @@ public class LoginLockout extends DomainObject<LoginLockout> {
 
     /**
      * Retrieve all LoginLockout entries from the database
-     * 
+     *
      * @return The List of entries found
      */
     @SuppressWarnings ( "unchecked" )

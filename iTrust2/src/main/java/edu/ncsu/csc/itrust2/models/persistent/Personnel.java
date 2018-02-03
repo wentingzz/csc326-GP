@@ -92,7 +92,7 @@ public class Personnel extends DomainObject<Personnel> {
      * This stores a reference to the User object that this personnel is.
      * Mandatory.
      */
-    @JoinColumn ( name = "self_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "self_id", columnDefinition = "varchar(100)" )
     @OneToOne
     private User    self;
 

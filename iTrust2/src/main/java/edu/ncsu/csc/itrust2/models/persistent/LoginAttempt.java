@@ -18,9 +18,9 @@ import org.hibernate.criterion.Criterion;
  * for a User, but not both. This way, IP lockouts and User lockouts are
  * independent, and clearing one will not affect the other. Once the number of
  * Attempts for a user or IP reaches a threshold, all Attempts are removed and a
- * LoginLockout is created. Attempts do not expire, but are cleared on successful
- * authentication. If an attempt is for a known username, two objects are
- * created, one for the IP and one for the user. If the username is unknown,
+ * LoginLockout is created. Attempts do not expire, but are cleared on
+ * successful authentication. If an attempt is for a known username, two objects
+ * are created, one for the IP and one for the user. If the username is unknown,
  * then only one is created for the IP.
  *
  * @author Thomas
@@ -38,7 +38,7 @@ public class LoginAttempt extends DomainObject<LoginAttempt> {
     private String   ip;
 
     @ManyToOne
-    @JoinColumn ( name = "user_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "user_id", columnDefinition = "varchar(100)" )
     private User     user;
 
     private Calendar time;

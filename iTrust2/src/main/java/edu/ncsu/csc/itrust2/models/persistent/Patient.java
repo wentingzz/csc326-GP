@@ -192,7 +192,7 @@ public class Patient extends DomainObject<Patient> implements Serializable {
      * Mandatory.
      */
     @OneToOne
-    @JoinColumn ( name = "self_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "self_id", columnDefinition = "varchar(100)" )
     @Id
     private User      self;
 
@@ -201,7 +201,7 @@ public class Patient extends DomainObject<Patient> implements Serializable {
      * Optional.
      */
     @ManyToOne
-    @JoinColumn ( name = "mother_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "mother_id", columnDefinition = "varchar(100)" )
     private User      mother;
 
     /**
@@ -209,7 +209,7 @@ public class Patient extends DomainObject<Patient> implements Serializable {
      * Optional.
      */
     @ManyToOne
-    @JoinColumn ( name = "father_id", columnDefinition="varchar(100)" )
+    @JoinColumn ( name = "father_id", columnDefinition = "varchar(100)" )
     private User      father;
 
     /**
