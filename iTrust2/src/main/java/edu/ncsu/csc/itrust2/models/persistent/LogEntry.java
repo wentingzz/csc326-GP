@@ -256,4 +256,20 @@ public class LogEntry extends DomainObject<LogEntry> {
     public void setTime ( final Calendar time ) {
         this.time = time;
     }
+
+    /**
+     * Compare this LogEntry's time to the given time
+     *
+     * @param timeToCompare
+     *            time to compare
+     * @return 0 if the date is the same; returns negative if this LogEntry is
+     *         before given time; returns positive if this LogEntry is after
+     *         given time
+     */
+    public int compareTo ( final Calendar timeToCompare ) {// TODO test needed??
+        if ( timeToCompare == null ) {
+            throw new IllegalArgumentException();
+        }
+        return this.getTime().compareTo( timeToCompare );
+    }
 }

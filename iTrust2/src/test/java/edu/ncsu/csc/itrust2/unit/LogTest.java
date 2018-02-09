@@ -57,5 +57,14 @@ public class LogTest {
         assertEquals( "logHcp", twoUserEntry.getSecondaryUser() );
         assertNotNull( twoUserEntry.getTime() );
         assertEquals( "test log entry with patient and hcp", twoUserEntry.getMessage() );
+
+        // System.out.println( "\n\nOutput:\n" + LoggerUtil.getTopForUser(
+        // "logHcp", 10 ) + "\n\n" );
+        // final List<LogEntry> list = LoggerUtil.getTopForUser( "logHcp", 5 );
+        // assertEquals( 5, list.size() );
+        // for ( int i = 0; i < 5; i++ ) {
+        // System.out.println( list.get( i ).getTime().getTime() );
+        // }
     }
+
 }

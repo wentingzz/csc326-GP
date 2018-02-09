@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust2.controllers.api;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -49,4 +50,9 @@ public class APILogEntryController extends APIController {
                 : new ResponseEntity( entry, HttpStatus.OK );
     }
 
+    public List<LogEntry> getLogEntriesSpan ( final Calendar timeOne, final Calendar timeTwo ) {
+        final List<LogEntry> sorted = LogEntry.getLogEntries();
+        sorted.sort( null );
+        return sorted;
+    }
 }
