@@ -135,7 +135,7 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                                 + ", \n\nThis email is to notify you that your account has been locked after 3 unsuccessful login attempts from your user ID. \n";
                         body += "--iTrust2 Staff";
                         try {
-                            EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
+                            EmailUtil.sendEmail( addrEmail, "iTrust2 Appointment Request", body );
                         }
                         catch ( final MessagingException e ) {
                             // TODO Auto-generated catch block
