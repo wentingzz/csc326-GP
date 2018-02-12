@@ -263,8 +263,8 @@ public class LogEntry extends DomainObject<LogEntry> {
      * @param timeToCompare
      *            time to compare
      * @return 0 if the date is the same; returns negative if this LogEntry is
-     *         before given time; returns positive if this LogEntry is after
-     *         given time
+     *         before given time(more recent); returns positive if this LogEntry
+     *         is after(more recent) given time
      */
     public int compareTo ( final Calendar timeToCompare ) {// TODO test needed??
         if ( timeToCompare == null ) {
