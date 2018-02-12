@@ -80,7 +80,7 @@ public class APIAppointmentRequestController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/appointmentrequests" )
     public ResponseEntity createAppointmentRequest ( @RequestBody final AppointmentRequestForm requestF ) {
-        final String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String name = requestF.getPatient();
         final User user = User.getByName( name );
         try {
             final AppointmentRequest request = new AppointmentRequest( requestF );
@@ -137,7 +137,7 @@ public class APIAppointmentRequestController extends APIController {
     @DeleteMapping ( BASE_PATH + "/appointmentrequests/{id}" )
     public ResponseEntity deleteAppointmentRequest ( @PathVariable final Long id ) {
         final AppointmentRequest request = AppointmentRequest.getById( id );
-        final String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        final String name = request.getPatient().getUsername();
         final User user = User.getByName( name );
         if ( null == request ) {
             return new ResponseEntity( errorResponse( "No appointmentrequest found for id " + id ),
@@ -197,8 +197,6 @@ public class APIAppointmentRequestController extends APIController {
     @PutMapping ( BASE_PATH + "/appointmentrequests/{id}" )
     public ResponseEntity updateAppointmentRequest ( @PathVariable final Long id,
             @RequestBody final AppointmentRequestForm requestF ) {
-        final String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        final User user = User.getByName( name );
 
         try {
             final AppointmentRequest request = new AppointmentRequest( requestF );
@@ -215,6 +213,8 @@ public class APIAppointmentRequestController extends APIController {
             }
 
             request.save();
+            final String name = request.getPatient().getUsername();
+            final User user = User.getByName( name );
             String addr = "";
             String firstName = "";
             final Personnel person = Personnel.getByName( user );
