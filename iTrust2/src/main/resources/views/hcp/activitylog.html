@@ -61,8 +61,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="a in logentries" name="logentry">
-							<td name="timestamp">{{a.time}}</td>
+						<tr ng-repeat="a in logs | limitTo: 50" name="logentry">
+							<td name="timestamp">{{a.time.month + 1}}/{{a.time.dayOfMonth}}/{{a.time.year}} {{a.time.hourOfDay}}:{{a.time.minute}}:{{a.time.second}}</td>
 							<td name="accname">{{a.primaryUser}}</td>
 							<td name="accrole">{{a.primaryUser}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 							<td name="description">{{a.message}}</td>
