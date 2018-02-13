@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust2.controllers.api;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.itrust2.models.persistent.LogEntry;
+import edu.ncsu.csc.itrust2.utils.LoggerUtil;
 
 /**
  * REST controller for interacting with Log Entry-related endpoints This will
@@ -49,4 +53,56 @@ public class APILogEntryController extends APIController {
                 : new ResponseEntity( entry, HttpStatus.OK );
     }
 
+    /**
+     * Gets the top ten LogEntries
+     * 
+     * @param user
+     *            id
+     * @return the top 10 LogEntries
+     */
+    public List<LogEntry> getLogEntriesSpan ( @PathVariable ( "id" ) final String user ) {
+        return LoggerUtil.getTopForUser( user, 10 );
+    }
+
+    /**
+     * Returns LogEntries between timeOne and timeTwo in a order that shows most
+     * recent LogEntry first
+     *
+     * @param user
+     *            id
+     * @param timeOne
+     *            start date
+     * @param timeTwo
+     *            end date
+     * @return LogEntries between start date and end date
+     */
+    public List<LogEntry> getLogEntriesSpan ( @PathVariable ( "id" ) final String user, final Calendar timeOne,
+            final Calendar timeTwo ) {
+        if ( timeOne.compareTo( timeTwo ) > 0 ) {// start data is after end date
+            return null; // TODO throw exception?
+        }
+        final List<LogEntry> list = LogEntry.getAllForUser( user );
+        list.sort( new Comparator<Object>() {
+            @Override
+            public int compare ( final Object arg0, final Object arg1 ) {
+                return ( (LogEntry) arg0 ).getTime().compareTo( ( (LogEntry) arg1 ).getTime() );
+            }
+        } );
+
+        // list is sorted
+        final List<LogEntry> listBetweenDates = new ArrayList<LogEntry>();
+
+        // binary search the start date and end date
+
+        final int size = list.size();
+        for ( int i = 0; i < size; i++ ) { // LogEntry is after start date
+                                           // and before end date
+            final LogEntry cur = list.get( i );
+            if ( cur.getTime().compareTo( timeTwo ) <= 0 && cur.getTime().compareTo( timeOne ) >= 0 ) {
+                listBetweenDates.add( cur );
+            }
+        }
+
+        return listBetweenDates;
+    }
 }
