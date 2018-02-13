@@ -64,6 +64,12 @@ public class APIEnumTest {
 
         mvc.perform( get( "/api/v1/state" ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
+        // test getting house smoking statuses
+        mvc.perform( get( "/api/v1/housesmoking" ) ).andExpect( status().isOk() )
+                .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
+        // test getting patient smoking statuses
+        mvc.perform( get( "/api/v1/patientsmoking" ) ).andExpect( status().isOk() )
+                .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
     }
 
 }
