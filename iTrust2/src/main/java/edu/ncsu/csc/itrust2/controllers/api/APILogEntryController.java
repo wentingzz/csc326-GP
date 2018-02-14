@@ -128,6 +128,21 @@ public class APILogEntryController extends APIController {
         if ( self == null ) {
             return null;
         }
-        return LoggerUtil.getAllForUser( self );
+        final List<LogEntry> list = LogEntry.getAllForUser( self.getUsername() );
+        list.sort( new Comparator<Object>() {
+            @Override
+            public int compare ( final Object arg0, final Object arg1 ) {
+                return ( (LogEntry) arg1 ).getTime().compareTo( ( (LogEntry) arg0 ).getTime() );
+            }
+        } );
+
+        // list is sorted
+        final int size = list.size();
+        if ( size <= 10 ) {
+            return list;
+        }
+        else {
+            return list.subList( 0, 10 );
+        }
     }
 }
