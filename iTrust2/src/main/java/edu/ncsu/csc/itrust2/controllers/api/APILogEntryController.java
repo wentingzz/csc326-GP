@@ -2,16 +2,19 @@ package edu.ncsu.csc.itrust2.controllers.api;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.itrust2.models.persistent.LogEntry;
+import edu.ncsu.csc.itrust2.models.persistent.User;
 import edu.ncsu.csc.itrust2.utils.LoggerUtil;
 
 /**
@@ -34,7 +37,9 @@ public class APILogEntryController extends APIController {
      */
     @GetMapping ( BASE_PATH + "/logentries" )
     public List<LogEntry> getLogEntries () {
-        return LogEntry.getLogEntries();
+        final List<LogEntry> allLogs = LogEntry.getLogEntries();
+        Collections.reverse( allLogs );
+        return allLogs;
     }
 
     /**
@@ -55,11 +60,12 @@ public class APILogEntryController extends APIController {
 
     /**
      * Gets the top ten LogEntries
-     * 
+     *
      * @param user
      *            id
      * @return the top 10 LogEntries
      */
+    @GetMapping ( BASE_PATH + "/logentriesten/{id}" )
     public List<LogEntry> getLogEntriesSpan ( @PathVariable ( "id" ) final String user ) {
         return LoggerUtil.getTopForUser( user, 10 );
     }
@@ -76,12 +82,17 @@ public class APILogEntryController extends APIController {
      *            end date
      * @return LogEntries between start date and end date
      */
-    public List<LogEntry> getLogEntriesSpan ( @PathVariable ( "id" ) final String user, final Calendar timeOne,
-            final Calendar timeTwo ) {
+    @GetMapping ( value = BASE_PATH + "/logEntriesSpan" )
+    public List<LogEntry> getLogEntriesSpan ( final Calendar timeOne, final Calendar timeTwo ) {
+        final User self = User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() );
+        if ( self == null ) {
+            return null;
+        }
+
         if ( timeOne.compareTo( timeTwo ) > 0 ) {// start data is after end date
             return null; // TODO throw exception?
         }
-        final List<LogEntry> list = LogEntry.getAllForUser( user );
+        final List<LogEntry> list = LogEntry.getAllForUser( self.getUsername() );
         list.sort( new Comparator<Object>() {
             @Override
             public int compare ( final Object arg0, final Object arg1 ) {
@@ -104,5 +115,19 @@ public class APILogEntryController extends APIController {
         }
 
         return listBetweenDates;
+    }
+
+    /**
+     * Get all log entries for a specified user
+     *
+     * @return all logs for that user
+     */
+    @GetMapping ( BASE_PATH + "/logentriesuser" )
+    public List<LogEntry> getLogEntriesUser () {
+        final User self = User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() );
+        if ( self == null ) {
+            return null;
+        }
+        return LoggerUtil.getAllForUser( self );
     }
 }

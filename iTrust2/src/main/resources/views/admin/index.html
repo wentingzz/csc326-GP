@@ -1,10 +1,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="layout :: head(title=~{::title},links=~{})">
 <title>Admin Home</title>
+
+<!-- Angular and Bootstrap files  -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 </head>
 <body th:include="layout :: body" th:with="content=~{::content}">
 	<div th:fragment="content">
 		<h1>Welcome to iTrust2 - Admin</h1>
+		
+		
+		<script th:inline="javascript">
+		/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
+		/*<![CDATA[*/
+			var app = angular.module("activitylog", []);
+			app.controller('logsCtrl', function($scope, $http) {
+				// get all logs of patient and display in table			
+				$http.get("/iTrust2/api/v1/logentriesuser").then(
+						function(response) {
+							$scope.logs = response.data;
+							$scope.message = "";
+						}, function(rejection) {
+							$scope.logs = [];
+							$scope.message = "Unable to display log entries";
+						});
+				
+			});
+		</script>
+		
+		<div ng-app="activitylog" ng-controller="logsCtrl">
+		
+			<!-- Info on tables from https://hello-angularjs.appspot.com/removetablerow -->
+			<div class="container">
+				<h4 style="color:red" ng-model="message"></h4>
+				
+				<h2>Logs</h2>
+				<table style="width:100%" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Timestamp</th>
+							<th>Accessor Name</th>
+							<th>Accessor Role</th>
+							<th>Description</th>
+							<th>Transaction Type</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="a in logs | limitTo: 10" name="logentry">
+							<td name="timestamp">{{a.time.month + 1}}/{{a.time.dayOfMonth}}/{{a.time.year}} {{a.time.hourOfDay}}:{{a.time.minute}}:{{a.time.second}}</td>
+							<td name="accname">{{a.primaryUser}}</td>
+							<td name="accrole">{{a.primaryUser}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
+							<td name="description">{{a.message}}</td>
+							<td name="transaction">{{a.logCode}}</td>
+						</tr>
+					</tbody>			
+				</table>
+			</div>
+		</div>
+		
+		</div>
 	</div>
 </body>
 </html>

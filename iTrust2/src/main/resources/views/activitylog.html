@@ -16,7 +16,7 @@
 			var app = angular.module("activitylog", []);
 			app.controller('logsCtrl', function($scope, $http) {
 				// get all logs of patient and display in table			
-				$http.get("/iTrust2/api/v1/logentries").then(
+				$http.get("/iTrust2/api/v1/logentriesuser").then(
 						function(response) {
 							$scope.logs = response.data;
 							$scope.message = "";
@@ -25,21 +25,23 @@
 							$scope.message = "Unable to display log entries";
 						});
 				
+				$scope.totalDisplayed = 20;
 				
-				// Helper method to create 2-digit version of a value -- from documentOfficeVisit.html
-				function twoDigit(num) {
-					if (num < 10) {
-						return "0" + num;
-					}
-					return num;
-				}
+				$scope.loadMore = function () {
+				  $scope.totalDisplayed += 20;  
+				};
 				
-				// Format a date from given json
-				$scope.getDate = function getDate(date) {
-					/* The months start at 0... only the months.  So we have to add 1 to get the correct input.*/
-					month = date.month + 1;
-					return twoDigit(month) + "/" + twoDigit(date.dayOfMonth) + "/" + date.year;
-				}
+				$scope.btdates = function() {
+					$http.get("/iTrust2/api/v1/logEntriesSpan", $scope.startDate, $scope.endDate).then(
+							function(response) {
+								$scope.logs = response.data;
+								$scope.message = "";
+							}, function(rejection) {
+								$scope.logs = [];
+								$scope.message = "Unable to display log entries";
+							});
+				};
+				
 			});
 		</script>
 		
@@ -50,10 +52,31 @@
 				<h4 style="color:red" ng-model="message"></h4>
 				
 				<h2>Logs</h2>
+				
+				<!-- Loads 20 more logs -->
+				<button class="btn" ng-click="loadMore()">Load more logs</button>
+				<br><br>
+				<!-- Enter date range -->
+				<form name="datesForm" ng-submit="btdates()">
+					<div>
+						<label>Start Date</label>
+						<input type="text" class="form-control" ng-model="startDate" placeholder="MM/DD/YYYY">
+					</div>
+					
+					<div>
+						<label>End Date</label>
+						<input type="text" class="form-control" ng-model="endDate" placeholder="MM/DD/YYYY">
+					</div>
+					
+					<div class="col-md-12 text-right">
+                              <button type="submit" class="btn btn-success" name="submit">Submit dates</button>
+                    </div>
+				</form>
+				
 				<table style="width:100%" class="table table-hover">
 					<thead>
 						<tr>
-							<th>Timestamp</th>
+							<th>Time Stamp</th>
 							<th>Accessor Name</th>
 							<th>Accessor Role</th>
 							<th>Description</th>
@@ -61,7 +84,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="a in logs | limitTo: 50" name="logentry">
+						<tr ng-repeat="a in logs | limitTo:totalDisplayed" name="logentry">
 							<td name="timestamp">{{a.time.month + 1}}/{{a.time.dayOfMonth}}/{{a.time.year}} {{a.time.hourOfDay}}:{{a.time.minute}}:{{a.time.second}}</td>
 							<td name="accname">{{a.primaryUser}}</td>
 							<td name="accrole">{{a.primaryUser}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
