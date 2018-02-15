@@ -70,6 +70,8 @@ public class APIAppointmentRequestTest {
     @Test
     public void testDeleteNonExistentAppointment () throws Exception {
         mvc.perform( delete( "/api/v1/appointmentrequests/-1" ) ).andExpect( status().isNotFound() );
+
+        mvc.perform( delete( "/api/v1/appointmentrequests/e" ) ).andExpect( status().is4xxClientError() );
     }
 
     /**
