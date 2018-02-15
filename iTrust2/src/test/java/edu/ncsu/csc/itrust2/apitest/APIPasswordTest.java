@@ -79,7 +79,7 @@ public class APIPasswordTest {
         personnel.setAddress1( "1 Test Street" );
         personnel.setAddress2( "Address Part 2" );
         personnel.setCity( "Prag" );
-        personnel.setEmail( "csc326.201.1@gmail.com" );
+        personnel.setEmail( "csc326.203.2@gmail.com" );
         personnel.setFirstName( "Test" );
         personnel.setLastName( "HCP" );
         personnel.setPhone( "123-456-7890" );
@@ -97,7 +97,7 @@ public class APIPasswordTest {
 
         // test the reset request for a known user
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().isOk() );
+                .content( "patientPW" ) ).andExpect( status().is5xxServerError() );
 
         final Personnel p = Personnel.getByName( user );
         p.delete();
@@ -126,7 +126,7 @@ public class APIPasswordTest {
                 .content( TestUtils.asJsonString( form ) ) ).andExpect( status().isBadRequest() );
 
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().isBadRequest() );
+                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
 
     }
 
@@ -142,15 +142,15 @@ public class APIPasswordTest {
         final UserForm patient = new UserForm( "patientPW", "123456", Role.ROLE_PATIENT, 1 );
 
         // test the reset request for an unknown user
-        mvc.perform( post( "/api/v1/requestPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().isOk() );
+        mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
         // make a user and form
         User user = new User( patient );
         user.save();
         user = User.getByName( "patientPW" ); // ensure they exist
         // test the reset request for a known user, invalid token
-        mvc.perform( post( "/api/v1/requestPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().isOk() );
+        mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
     }
 
     // Use patient form instead of personnel form
@@ -173,7 +173,7 @@ public class APIPasswordTest {
         patient.setAddress1( "1 Test Street" );
         patient.setAddress2( "Address Part 2" );
         patient.setCity( "Prag" );
-        patient.setEmail( "csc326.201.1@gmail.com" );
+        patient.setEmail( "csc326.203.2@gmail.com" );
         patient.setFirstName( "Test" );
         patient.setLastName( "HCP" );
         patient.setPhone( "123-456-7890" );
@@ -191,7 +191,7 @@ public class APIPasswordTest {
 
         // test the reset request for a known user
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().isOk() );
+                .content( "patientPW" ) ).andExpect( status().is5xxServerError() );
 
         final Personnel p = Personnel.getByName( user );
         p.delete();
