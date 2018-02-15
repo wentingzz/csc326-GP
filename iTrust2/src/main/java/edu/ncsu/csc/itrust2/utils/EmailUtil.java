@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust2.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -24,7 +27,7 @@ public class EmailUtil {
     /**
      * Send an email from the email account in the system's `email.properties`
      * file
-     * 
+     *
      * @param addr
      *            Address to send to
      * @param subject
@@ -47,8 +50,18 @@ public class EmailUtil {
 
         final Properties properties = new Properties();
 
-        final String filename = "email.properties";
-        input = DBUtil.class.getClassLoader().getResourceAsStream( filename );
+        final String filename = "/src/main/java/email.properties";
+        // Load the directory as a resource
+        final File emailFile = new File( filename );
+        // List the directory
+        try {
+            input = new FileInputStream( emailFile );
+        }
+        catch ( final FileNotFoundException e1 ) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        // DBUtil.class.getClassLoader().getResourceAsStream( filename );
         if ( null != input ) {
             try {
                 properties.load( input );
