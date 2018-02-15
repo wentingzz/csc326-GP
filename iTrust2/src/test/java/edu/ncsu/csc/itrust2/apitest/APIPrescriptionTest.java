@@ -158,6 +158,11 @@ public class APIPrescriptionTest {
         final Prescription fetched = gson.fromJson( getContent, Prescription.class );
         assertEquals( p1.getId(), fetched.getId() );
 
+        // Get valid single prescription by id
+        mvc.perform( get( "/api/v1/prescriptions/" + p1.getId() ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( new PrescriptionForm( p1 ) ) ) ).andExpect( status().isOk() )
+                .andReturn().getResponse().getContentAsString();
+
         // Attempt invalid edit
         p2.setRenewals( -1 );
         mvc.perform( put( "/api/v1/prescriptions" ).contentType( MediaType.APPLICATION_JSON )
