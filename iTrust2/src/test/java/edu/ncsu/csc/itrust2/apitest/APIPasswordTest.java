@@ -56,7 +56,7 @@ public class APIPasswordTest {
         form.setNewPassword( newP );
         form.setNewPassword2( newP );
         mvc.perform( post( "/api/v1/changePassword" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( form ) ) );
+                .content( TestUtils.asJsonString( form ) ) ).andExpect( status().isOk() );
     }
 
     // Save auto-formatter wont let this be a javadoc comment
@@ -79,7 +79,7 @@ public class APIPasswordTest {
         personnel.setAddress1( "1 Test Street" );
         personnel.setAddress2( "Address Part 2" );
         personnel.setCity( "Prag" );
-        personnel.setEmail( "csc326.203.2@gmail.com" );
+        personnel.setEmail( "csc326.201.1@gmail.com" );
         personnel.setFirstName( "Test" );
         personnel.setLastName( "HCP" );
         personnel.setPhone( "123-456-7890" );
@@ -94,10 +94,6 @@ public class APIPasswordTest {
         user = User.getByName( "patientPW" ); // reload so changes are visible
         assertFalse( pe.matches( "123456", user.getPassword() ) );
         assertTrue( pe.matches( "654321", user.getPassword() ) );
-
-        // test the reset request for a known user
-        mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().is5xxServerError() );
 
         final Personnel p = Personnel.getByName( user );
         p.delete();
@@ -126,7 +122,7 @@ public class APIPasswordTest {
                 .content( TestUtils.asJsonString( form ) ) ).andExpect( status().isBadRequest() );
 
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
+                .content( "patientPW" ) ).andExpect( status().isBadRequest() );
 
     }
 
@@ -135,22 +131,23 @@ public class APIPasswordTest {
      *
      * @throws Exception
      */
-    @WithMockUser ( username = "patientPW", roles = { "USER", "ADMIN" } )
+    @WithMockUser ( username = "patientPW1", roles = { "USER", "ADMIN" } )
     @Test
     public void testResetPassword () throws Exception {
 
-        final UserForm patient = new UserForm( "patientPW", "123456", Role.ROLE_PATIENT, 1 );
+        final UserForm patient = new UserForm( "patientPW1", "123456", Role.ROLE_PATIENT, 1 );
 
         // test the reset request for an unknown user
         mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
+                .content( "patientPW1" ) ).andExpect( status().is4xxClientError() );
         // make a user and form
         User user = new User( patient );
-        user.save();
-        user = User.getByName( "patientPW" ); // ensure they exist
+        user = User.getByName( "patientPW1" ); // ensure they exist
+        // assertNotNull( user );
         // test the reset request for a known user, invalid token
         mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().is4xxClientError() );
+                .content( "patientPW1" ) ).andExpect( status().is4xxClientError() );
+        // user.delete();
     }
 
     // Use patient form instead of personnel form
@@ -158,16 +155,16 @@ public class APIPasswordTest {
     // Changes to 654321.
     // Reset to 98765.
     // Don't delete user
-    @WithMockUser ( username = "patientPW", roles = { "USER", "ADMIN" } )
+    @WithMockUser ( username = "patientPW2", roles = { "USER", "ADMIN" } )
     @Test
     public void testMoreValidPasswordChanges () throws Exception {
 
-        final UserForm patientUserForm = new UserForm( "patientPW", "123456", Role.ROLE_PATIENT, 1 );
+        final UserForm patientUserForm = new UserForm( "patientPW2", "123456", Role.ROLE_PATIENT, 1 );
 
         User user = new User( patientUserForm );
         user.save();
 
-        user = User.getByName( "patientPW" ); // ensure they exist
+        user = User.getByName( "patientPW2" ); // ensure they exist
 
         final PatientForm patient = new PatientForm();
         patient.setAddress1( "1 Test Street" );
@@ -185,13 +182,14 @@ public class APIPasswordTest {
 
         assertTrue( pe.matches( "123456", user.getPassword() ) );
         changePassword( user, "123456", "654321" );
-        user = User.getByName( "patientPW" ); // reload so changes are visible
+        user = User.getByName( "patientPW2" ); // reload so changes are
+        // visible
         assertFalse( pe.matches( "123456", user.getPassword() ) );
         assertTrue( pe.matches( "654321", user.getPassword() ) );
 
         // test the reset request for a known user
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW" ) ).andExpect( status().is5xxServerError() );
+                .content( "patientPW2" ) ).andExpect( status().is5xxServerError() );
 
         final Personnel p = Personnel.getByName( user );
         p.delete();
