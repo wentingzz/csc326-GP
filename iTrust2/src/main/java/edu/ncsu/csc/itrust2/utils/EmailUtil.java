@@ -50,7 +50,7 @@ public class EmailUtil {
 
         final Properties properties = new Properties();
 
-        final String filename = "/src/main/java/email.properties";
+        final String filename = "src/main/java/email.properties";
         final File emailFile = new File( filename );
         try {
             input = new FileInputStream( emailFile );
