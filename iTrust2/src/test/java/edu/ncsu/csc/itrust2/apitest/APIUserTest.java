@@ -87,8 +87,6 @@ public class APIUserTest {
 
         mvc.perform( get( "/api/v1/users/sven_forkbeard" ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
-        // tests getting the role of a valid user
-        mvc.perform( get( "/api/v1/users/sven_forkbeard/role" ) ).andExpect( status().isOk() );
 
         sven.setEnabled( null );
 
@@ -104,6 +102,15 @@ public class APIUserTest {
         sven.setUsername( "sven_badname" );
         mvc.perform( put( "/api/v1/users/sven_badname" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( sven ) ) ).andExpect( status().isNotFound() );
+
+        // test updating the user
+        final UserForm svenUpdated = new UserForm( "sven_forkbeard", "3141592", Role.ROLE_PATIENT, 1 );
+        mvc.perform( put( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( svenUpdated ) ) ).andExpect( status().isOk() );
+
+        // tests getting the role of a valid user
+        mvc.perform( put( "/api/v1/users/sven_forkbeard/role" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( "ROLE_PATIENT" ) ) ).andExpect( status().isOk() );
 
     }
 
