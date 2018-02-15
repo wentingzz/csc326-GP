@@ -94,6 +94,10 @@ public class APIPasswordTest {
         assertFalse( pe.matches( "123456", user.getPassword() ) );
         assertTrue( pe.matches( "654321", user.getPassword() ) );
 
+        // test the reset request for a known user
+        mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW" ) ).andExpect( status().isOk() );
+
         final Personnel p = Personnel.getByName( user );
         p.delete();
         user.delete();

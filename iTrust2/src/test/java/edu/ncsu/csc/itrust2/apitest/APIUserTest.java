@@ -87,6 +87,8 @@ public class APIUserTest {
 
         mvc.perform( get( "/api/v1/users/sven_forkbeard" ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
+        // tests getting the role of a valid user
+        mvc.perform( get( "/api/v1/users/sven_forkbeard/role" ) ).andExpect( status().isOk() );
 
         sven.setEnabled( null );
 
