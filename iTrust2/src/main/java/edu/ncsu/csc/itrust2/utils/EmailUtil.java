@@ -51,9 +51,7 @@ public class EmailUtil {
         final Properties properties = new Properties();
 
         final String filename = "/src/main/java/email.properties";
-        // Load the directory as a resource
         final File emailFile = new File( filename );
-        // List the directory
         try {
             input = new FileInputStream( emailFile );
         }
@@ -61,7 +59,6 @@ public class EmailUtil {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
-        // DBUtil.class.getClassLoader().getResourceAsStream( filename );
         if ( null != input ) {
             try {
                 properties.load( input );
