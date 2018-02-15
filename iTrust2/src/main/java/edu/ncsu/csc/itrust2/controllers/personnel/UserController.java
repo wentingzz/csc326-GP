@@ -65,6 +65,7 @@ public class UserController {
         try {
             p = new Personnel( form );
             p.setSelf( User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() ) );
+            form.setId( form.getId() );
         }
         catch ( final Exception e ) {
             e.printStackTrace( System.out );

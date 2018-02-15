@@ -17,6 +17,9 @@ import edu.ncsu.csc.itrust2.forms.patient.AppointmentRequestForm;
 import edu.ncsu.csc.itrust2.models.enums.Status;
 import edu.ncsu.csc.itrust2.models.enums.TransactionType;
 import edu.ncsu.csc.itrust2.models.persistent.AppointmentRequest;
+import edu.ncsu.csc.itrust2.models.persistent.Patient;
+import edu.ncsu.csc.itrust2.models.persistent.User;
+import edu.ncsu.csc.itrust2.utils.EmailUtil;
 import edu.ncsu.csc.itrust2.utils.LoggerUtil;
 
 /**
@@ -78,6 +81,41 @@ public class AppointmentControllerHCP {
         final boolean aptAction = action.equals( "reject" );
         ar.setStatus( aptAction ? Status.REJECTED : Status.APPROVED );
         ar.save();
+        String addr;
+        String firstName;
+        String body = "";
+        final User patientUser = ar.getPatient();
+        final Patient patient = Patient.getPatient( patientUser );
+        try {
+            if ( patient != null ) {
+                addr = patient.getEmail();
+                firstName = patient.getFirstName();
+            }
+            else {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+                throw new Exception( "No Patient on file for " + patientUser.getId() );
+            }
+            // if the appointment was rejected, state in the body that it was
+            // rejected.
+            // else, state it was accepted
+            if ( ar.getStatus().equals( Status.REJECTED ) ) {
+                body = "Dear " + firstName
+                        + ", \n\nThis email is to notify you that your appointment has been declined by your healthcare provider. \n";
+                body += "--iTrust2 Staff";
+            }
+            else {
+                body = "Dear " + firstName
+                        + ", \n\nThis email is to notify you that your appointment has been approved by your healthcare provider.  \n";
+                body += "--iTrust2 Staff";
+            }
+            EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
+            LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_EMAIL_SENT, patientUser.getUsername(),
+                    "An email regarding the status of your appointment has been sent to you." );
+        }
+        catch ( final Exception e ) {
+            System.out.println( "Patient doesn't exist." );
+        }
         LoggerUtil.log(
                 aptAction ? TransactionType.APPOINTMENT_REQUEST_DENIED : TransactionType.APPOINTMENT_REQUEST_APPROVED,
                 ar.getHcp().getUsername(), ar.getPatient().getUsername() );

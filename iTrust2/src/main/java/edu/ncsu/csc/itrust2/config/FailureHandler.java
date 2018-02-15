@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust2.config;
 import java.io.IOException;
 import java.util.Calendar;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,10 +15,13 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import edu.ncsu.csc.itrust2.models.enums.TransactionType;
+import edu.ncsu.csc.itrust2.models.persistent.LoginAttempt;
 import edu.ncsu.csc.itrust2.models.persistent.LoginBan;
 import edu.ncsu.csc.itrust2.models.persistent.LoginLockout;
-import edu.ncsu.csc.itrust2.models.persistent.LoginAttempt;
+import edu.ncsu.csc.itrust2.models.persistent.Patient;
+import edu.ncsu.csc.itrust2.models.persistent.Personnel;
 import edu.ncsu.csc.itrust2.models.persistent.User;
+import edu.ncsu.csc.itrust2.utils.EmailUtil;
 import edu.ncsu.csc.itrust2.utils.LoggerUtil;
 
 /**
@@ -101,6 +105,42 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                         lock.setTime( Calendar.getInstance() );
                         lock.setUser( user );
                         lock.save();
+                        String addrEmail = "";
+                        String firstName = "";
+                        final Personnel person = Personnel.getByName( user );
+                        if ( person != null ) {
+                            addrEmail = person.getEmail();
+                            firstName = person.getFirstName();
+                        }
+                        else {
+                            final Patient patient = Patient.getPatient( user );
+                            if ( patient != null ) {
+                                addrEmail = patient.getEmail();
+                                firstName = patient.getFirstName();
+                            }
+                            else {
+                                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                                        "An email should have been sent to you, but there is no email associated with your account." );
+                                try {
+                                    throw new Exception( "No Patient or Personnel on file for " + user.getId() );
+                                }
+                                catch ( final Exception e ) {
+                                    // TODO Auto-generated catch block
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        String body = "Dear " + firstName
+                                + ", \n\nThis email is to notify you that your account has been locked after 3 unsuccessful login attempts from your user ID. \n";
+                        body += "--iTrust2 Staff";
+                        try {
+                            EmailUtil.sendEmail( addrEmail, "iTrust2 Lockout Notification", body );
+                        }
+                        catch ( final MessagingException e ) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
                         LoggerUtil.log( TransactionType.USER_LOCKOUT, username, null,
                                 username + " has been locked out for 1 hour." );
                         this.getRedirectStrategy().sendRedirect( request, response, "/login?locked" );
