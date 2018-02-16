@@ -14,32 +14,37 @@
 		/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
 		/*<![CDATA[*/
 			var app = angular.module("activitylog", []);
+			app.filter("dateRange", function() {
+				return function(listings, from, to){
+			    		var out = [];
+			        angular.forEach(listings, function(log){
+			        		if (log.Dates >= from  && log.Dates <= to) {
+			        		    	out.push(log);
+			            	}
+			        })
+			        return out;
+			    }
+			});
+			
 			app.controller('logsCtrl', function($scope, $http) {
 				// get all logs of patient and display in table			
 				$http.get("/iTrust2/api/v1/logentriesuser").then(
 						function(response) {
 							$scope.logs = response.data;
+							for(var i = 0; i < $scope.logs.length; i++) {
+					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    		}
 							$scope.message = "";
 						}, function(rejection) {
 							$scope.logs = [];
 							$scope.message = "Unable to display log entries";
 						});
 				
-				$scope.totalDisplayed = 20;
-				
+				$scope.totalDisplayed = 10;
+				$scope.from = new Date(0);
+			    $scope.to = new Date();
 				$scope.loadMore = function () {
-				  $scope.totalDisplayed += 20;  
-				};
-				
-				$scope.btdates = function() {
-					$http.get("/iTrust2/api/v1/logEntriesSpan", $scope.startDate, $scope.endDate).then(
-							function(response) {
-								$scope.logs = response.data;
-								$scope.message = "";
-							}, function(rejection) {
-								$scope.logs = [];
-								$scope.message = "Unable to display log entries";
-							});
+					$scope.totalDisplayed += 10;  
 				};
 				
 			});
@@ -55,23 +60,14 @@
 				
 				<!-- Loads 20 more logs -->
 				<button class="btn" ng-click="loadMore()">Load more logs</button>
-				<br><br>
 				<!-- Enter date range -->
-				<form name="datesForm" ng-submit="btdates()">
-					<div>
-						<label>Start Date</label>
-						<input type="text" class="form-control" ng-model="startDate" placeholder="MM/DD/YYYY">
-					</div>
-					
-					<div>
-						<label>End Date</label>
-						<input type="text" class="form-control" ng-model="endDate" placeholder="MM/DD/YYYY">
-					</div>
-					
-					<div class="col-md-12 text-right">
-                              <button type="submit" class="btn btn-success" name="submit">Submit dates</button>
-                    </div>
-				</form>
+				<br>
+				<label>Start Date</label>
+				<input type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
+				<label>End Date</label>
+				<input type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
+				
+				
 				
 				<table style="width:100%" class="table table-hover">
 					<thead>
@@ -84,8 +80,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="a in logs | limitTo:totalDisplayed" name="logentry">
-							<td name="timestamp">{{a.time.month + 1}}/{{a.time.dayOfMonth}}/{{a.time.year}} {{a.time.hourOfDay}}:{{a.time.minute}}:{{a.time.second}}</td>
+						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
+							<td name="timestamp">{{a.Dates | date: "dd/MM/yyyy hh:mm:ss"}}</td>
 							<td name="accname">{{a.primaryUser}}</td>
 							<td name="accrole">{{a.primaryUser}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 							<td name="description">{{a.message}}</td>

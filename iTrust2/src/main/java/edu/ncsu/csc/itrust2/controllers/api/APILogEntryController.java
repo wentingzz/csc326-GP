@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust2.controllers.api;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.itrust2.models.persistent.LogEntry;
 import edu.ncsu.csc.itrust2.models.persistent.User;
-import edu.ncsu.csc.itrust2.utils.LoggerUtil;
 
 /**
  * REST controller for interacting with Log Entry-related endpoints This will
@@ -59,65 +56,6 @@ public class APILogEntryController extends APIController {
     }
 
     /**
-     * Gets the top ten LogEntries
-     *
-     * @param user
-     *            id
-     * @return the top 10 LogEntries
-     */
-    @GetMapping ( BASE_PATH + "/logentriesten/{id}" )
-    public List<LogEntry> getLogEntriesSpan ( @PathVariable ( "id" ) final String user ) {
-        return LoggerUtil.getTopForUser( user, 10 );
-    }
-
-    /**
-     * Returns LogEntries between timeOne and timeTwo in a order that shows most
-     * recent LogEntry first
-     *
-     * @param user
-     *            id
-     * @param timeOne
-     *            start date
-     * @param timeTwo
-     *            end date
-     * @return LogEntries between start date and end date
-     */
-    @GetMapping ( value = BASE_PATH + "/logEntriesSpan" )
-    public List<LogEntry> getLogEntriesSpan ( final Calendar timeOne, final Calendar timeTwo ) {
-        final User self = User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() );
-        if ( self == null ) {
-            return null;
-        }
-
-        if ( timeOne.compareTo( timeTwo ) > 0 ) {// start data is after end date
-            return null; // TODO throw exception?
-        }
-        final List<LogEntry> list = LogEntry.getAllForUser( self.getUsername() );
-        list.sort( new Comparator<Object>() {
-            @Override
-            public int compare ( final Object arg0, final Object arg1 ) {
-                return ( (LogEntry) arg0 ).getTime().compareTo( ( (LogEntry) arg1 ).getTime() );
-            }
-        } );
-
-        // list is sorted
-        final List<LogEntry> listBetweenDates = new ArrayList<LogEntry>();
-
-        // binary search the start date and end date
-
-        final int size = list.size();
-        for ( int i = 0; i < size; i++ ) { // LogEntry is after start date
-                                           // and before end date
-            final LogEntry cur = list.get( i );
-            if ( cur.getTime().compareTo( timeTwo ) <= 0 && cur.getTime().compareTo( timeOne ) >= 0 ) {
-                listBetweenDates.add( cur );
-            }
-        }
-
-        return listBetweenDates;
-    }
-
-    /**
      * Get all log entries for a specified user
      *
      * @return all logs for that user
@@ -142,7 +80,7 @@ public class APILogEntryController extends APIController {
             return list;
         }
         else {
-            return list.subList( 0, 10 );
+            return list;
         }
     }
 }
