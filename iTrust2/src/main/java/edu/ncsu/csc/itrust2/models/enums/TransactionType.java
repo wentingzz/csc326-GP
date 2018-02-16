@@ -10,6 +10,7 @@ package edu.ncsu.csc.itrust2.models.enums;
  * representing the event.
  *
  * @author Kai Presler-Marshall
+ * @author Hannah Morrison
  *
  */
 public enum TransactionType {
@@ -254,6 +255,7 @@ public enum TransactionType {
      * An email alerting the user of an appointment request has been sent
      */
     APPOINTMENT_REQUEST_EMAIL_SENT ( 1402, "AppointmentRequest Email notification sent", true ),
+
     /**
      * An email alerting the user of an appointment request has been sent
      */
