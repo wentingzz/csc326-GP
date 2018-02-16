@@ -106,18 +106,22 @@ public class APIAppointmentRequestController extends APIController {
                         firstName = patient.getFirstName();
                     }
                     else {
-                        LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
-                                "An email should have been sent to you, but there is no email associated with your account." );
                         return new ResponseEntity(
                                 errorResponse( "No Patient or Personnel on file for " + user.getId() ),
                                 HttpStatus.NOT_FOUND );
                     }
 
-                    String body = "Dear " + firstName + ", \n\nWe receieved your request to make an appointment.\n";
-                    body += "--iTrust2 Admin";
-                    EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
-                    LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_EMAIL_SENT,
-                            "An email regarding your appointment request has been sent." );
+                    if ( addr == "" || addr == null ) {
+                        LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                                "An email should have been sent to you, but there is no email associated with your account." );
+                    }
+                    else {
+                        String body = "Dear " + firstName + ", \n\nWe receieved your request to make an appointment.\n";
+                        body += "--iTrust2 Admin";
+                        EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
+                        LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_EMAIL_SENT,
+                                "An email regarding your appointment request has been sent." );
+                    }
                 }
             }
             catch ( final NullPointerException e ) {

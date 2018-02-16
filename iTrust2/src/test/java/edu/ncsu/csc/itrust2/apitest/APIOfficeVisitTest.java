@@ -91,11 +91,11 @@ public class APIOfficeVisitTest {
      */
     @Test
     public void testPreScheduledOfficeVisit () throws Exception {
-        final UserForm hcp = new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 );
+        final UserForm hcp = new UserForm( "hcp1", "123456", Role.ROLE_HCP, 1 );
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( hcp ) ) );
 
-        final UserForm patient = new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 );
+        final UserForm patient = new UserForm( "patient1", "123456", Role.ROLE_PATIENT, 1 );
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( patient ) ) );
 
@@ -106,8 +106,8 @@ public class APIOfficeVisitTest {
         appointmentForm.setTime( "4:50 AM" );
         appointmentForm.setType( AppointmentType.GENERAL_CHECKUP.toString() );
         appointmentForm.setStatus( Status.APPROVED.toString() );
-        appointmentForm.setHcp( "hcp" );
-        appointmentForm.setPatient( "patient" );
+        appointmentForm.setHcp( "hcp1" );
+        appointmentForm.setPatient( "patient1" );
         appointmentForm.setComments( "Test appointment please ignore" );
         mvc.perform( post( "/api/v1/appointmentrequests" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( appointmentForm ) ) ).andExpect( status().isOk() );
@@ -117,8 +117,8 @@ public class APIOfficeVisitTest {
         visit.setPreScheduled( "yes" );
         visit.setDate( "11/19/2030" );
         visit.setTime( "4:50 AM" );
-        visit.setHcp( "hcp" );
-        visit.setPatient( "patient" );
+        visit.setHcp( "hcp1" );
+        visit.setPatient( "patient1" );
         visit.setNotes( "Test office visit" );
         visit.setType( AppointmentType.GENERAL_CHECKUP.toString() );
         visit.setHospital( "iTrust Test Hospital 2" );
