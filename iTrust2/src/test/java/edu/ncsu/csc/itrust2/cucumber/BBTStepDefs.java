@@ -1,6 +1,16 @@
 package edu.ncsu.csc.itrust2.cucumber;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
+import java.util.Properties;
+
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Store;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -186,15 +196,168 @@ public class BBTStepDefs {
 
     @Then ( "a lockout email is sent to the user" )
     public void verifyEmailLockout () {
+        final String username = "csc326.201.1@gmail.com";
+        final String password = "iTrust2Admin123456";
+        final String host = "pop.gmail.com";
+        final PasswordResetToken token = null;
+        boolean containsSubject = false;
+        int index = 0;
+        try {
+            // create properties field
+            final Properties properties = new Properties();
+            properties.put( "mail.store.protocol", "pop3" );
+            properties.put( "mail.pop3.host", host );
+            properties.put( "mail.pop3.port", "995" );
+            properties.put( "mail.pop3.starttls.enable", "true" );
+            final Session emailSession = Session.getDefaultInstance( properties );
+            // emailSession.setDebug(true);
+
+            // create the POP3 store object and connect with the pop server
+            final Store store = emailSession.getStore( "pop3s" );
+
+            store.connect( host, username, password );
+
+            // create the folder object and open it
+            final Folder emailFolder = store.getFolder( "INBOX" );
+            emailFolder.open( Folder.READ_WRITE );
+
+            // retrieve the messages from the folder in an array and print it
+            final Message[] messages = emailFolder.getMessages();
+            Arrays.sort( messages, ( x, y ) -> {
+                try {
+                    return y.getSentDate().compareTo( x.getSentDate() );
+                }
+                catch ( final MessagingException e ) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return 0;
+            } );
+            Message message;
+            // go through emails, looking for the subject line we want;
+            // if it exists, then containsSubject is true
+            while ( containsSubject == false ) {
+                message = messages[index];
+                if ( message.getSubject() != null && message.getSubject().contains( "iTrust2 Appointment Request" ) ) {
+                    containsSubject = true;
+                }
+                index++;
+            }
+        }
+        catch ( final Exception e ) {
+            e.printStackTrace();
+        }
+        if ( containsSubject == false ) {
+            fail( "Failed to receive email." );
+        }
     }
 
     @Then ( "a declined email is sent to the user" )
     public void verifyEmailDeclined () {
+        final String username = "csc326.201.1@gmail.com";
+        final String password = "iTrust2Admin123456";
+        final String host = "pop.gmail.com";
+        final PasswordResetToken token = null;
+        boolean containsSubject = false;
+        try {
+            // create properties field
+            final Properties properties = new Properties();
+            properties.put( "mail.store.protocol", "pop3" );
+            properties.put( "mail.pop3.host", host );
+            properties.put( "mail.pop3.port", "995" );
+            properties.put( "mail.pop3.starttls.enable", "true" );
+            final Session emailSession = Session.getDefaultInstance( properties );
+            // emailSession.setDebug(true);
 
+            // create the POP3 store object and connect with the pop server
+            final Store store = emailSession.getStore( "pop3s" );
+
+            store.connect( host, username, password );
+
+            // create the folder object and open it
+            final Folder emailFolder = store.getFolder( "INBOX" );
+            emailFolder.open( Folder.READ_WRITE );
+
+            // retrieve the messages from the folder in an array and print it
+            final Message[] messages = emailFolder.getMessages();
+            Arrays.sort( messages, ( x, y ) -> {
+                try {
+                    return y.getSentDate().compareTo( x.getSentDate() );
+                }
+                catch ( final MessagingException e ) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return 0;
+            } );
+            for ( final Message message : messages ) {
+                // SUBJECT
+                if ( containsSubject == false && message.getSubject() != null
+                        && message.getSubject().contains( "iTrust2 Appointment Request" ) ) {
+                    containsSubject = true;
+                }
+            }
+        }
+        catch ( final Exception e ) {
+            e.printStackTrace();
+        }
+        if ( containsSubject == false ) {
+            fail( "Failed to receive email." );
+        }
     }
 
     @Then ( "a password email is sent to the patient" )
     public void verifyEmailPassword () {
+        final String username = "csc326.201.1@gmail.com";
+        final String password = "iTrust2Admin123456";
+        final String host = "pop.gmail.com";
+        final PasswordResetToken token = null;
+        boolean containsSubject = false;
+        try {
+            // create properties field
+            final Properties properties = new Properties();
+            properties.put( "mail.store.protocol", "pop3" );
+            properties.put( "mail.pop3.host", host );
+            properties.put( "mail.pop3.port", "995" );
+            properties.put( "mail.pop3.starttls.enable", "true" );
+            final Session emailSession = Session.getDefaultInstance( properties );
+            // emailSession.setDebug(true);
+
+            // create the POP3 store object and connect with the pop server
+            final Store store = emailSession.getStore( "pop3s" );
+
+            store.connect( host, username, password );
+
+            // create the folder object and open it
+            final Folder emailFolder = store.getFolder( "INBOX" );
+            emailFolder.open( Folder.READ_WRITE );
+
+            // retrieve the messages from the folder in an array and print it
+            final Message[] messages = emailFolder.getMessages();
+            Arrays.sort( messages, ( x, y ) -> {
+                try {
+                    return y.getSentDate().compareTo( x.getSentDate() );
+                }
+                catch ( final MessagingException e ) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return 0;
+            } );
+            for ( final Message message : messages ) {
+                // SUBJECT
+                if ( containsSubject == false && message.getSubject() != null
+                        && message.getSubject().contains( "iTrust2 Password Reset" ) ) {
+                    containsSubject = true;
+                }
+            }
+        }
+        catch ( final Exception e ) {
+            e.printStackTrace();
+        }
+        if ( containsSubject == false ) {
+            fail( "Failed to receive email." );
+        }
 
     }
 
