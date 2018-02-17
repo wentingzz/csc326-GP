@@ -158,65 +158,65 @@ public class BBTStepDefs {
         // }
     }
 
-    @Then ( "a lockout email is sent to the user" )
-    public void verifyEmailLockout () {
-        // final String username = "csc326s18.203.2@gmail.com";
-        // final String password = "greenball";
-        // final String host = "pop.gmail.com";
-        // final PasswordResetToken token = null;
-        // boolean containsSubject = false;
-        // int index = 0;
-        // try {
-        // // create properties field
-        // final Properties properties = new Properties();
-        // properties.put( "mail.store.protocol", "pop3" );
-        // properties.put( "mail.pop3.host", host );
-        // properties.put( "mail.pop3.port", "995" );
-        // properties.put( "mail.pop3.starttls.enable", "true" );
-        // final Session emailSession = Session.getDefaultInstance( properties
-        // );
-        // // emailSession.setDebug(true);
-        //
-        // // create the POP3 store object and connect with the pop server
-        // final Store store = emailSession.getStore( "pop3s" );
-        //
-        // store.connect( host, username, password );
-        //
-        // // create the folder object and open it
-        // final Folder emailFolder = store.getFolder( "INBOX" );
-        // emailFolder.open( Folder.READ_WRITE );
-        //
-        // // retrieve the messages from the folder in an array and print it
-        // final Message[] messages = emailFolder.getMessages();
-        // Arrays.sort( messages, ( x, y ) -> {
-        // try {
-        // return y.getSentDate().compareTo( x.getSentDate() );
-        // }
-        // catch ( final MessagingException e ) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // return 0;
-        // } );
-        // Message message;
-        // // go through emails, looking for the subject line we want;
-        // // if it exists, then containsSubject is true
-        // while ( containsSubject == false ) {
-        // message = messages[index];
-        // if ( message.getSubject() != null && message.getSubject().contains(
-        // "iTrust2 Appointment Request" ) ) {
-        // containsSubject = true;
-        // }
-        // index++;
-        // }
-        // }
-        // catch ( final Exception e ) {
-        // e.printStackTrace();
-        // }
-        // if ( containsSubject == false ) {
-        // fail( "Failed to receive email." );
-        // }
-    }
+    // @Then ( "a lockout email is sent to the user" )
+    // public void verifyEmailLockout () {
+    // final String username = "csc326s18.203.2@gmail.com";
+    // final String password = "greenball";
+    // final String host = "pop.gmail.com";
+    // final PasswordResetToken token = null;
+    // boolean containsSubject = false;
+    // int index = 0;
+    // try {
+    // // create properties field
+    // final Properties properties = new Properties();
+    // properties.put( "mail.store.protocol", "pop3" );
+    // properties.put( "mail.pop3.host", host );
+    // properties.put( "mail.pop3.port", "995" );
+    // properties.put( "mail.pop3.starttls.enable", "true" );
+    // final Session emailSession = Session.getDefaultInstance( properties
+    // );
+    // // emailSession.setDebug(true);
+    //
+    // // create the POP3 store object and connect with the pop server
+    // final Store store = emailSession.getStore( "pop3s" );
+    //
+    // store.connect( host, username, password );
+    //
+    // // create the folder object and open it
+    // final Folder emailFolder = store.getFolder( "INBOX" );
+    // emailFolder.open( Folder.READ_WRITE );
+    //
+    // // retrieve the messages from the folder in an array and print it
+    // final Message[] messages = emailFolder.getMessages();
+    // Arrays.sort( messages, ( x, y ) -> {
+    // try {
+    // return y.getSentDate().compareTo( x.getSentDate() );
+    // }
+    // catch ( final MessagingException e ) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
+    // return 0;
+    // } );
+    // Message message;
+    // // go through emails, looking for the subject line we want;
+    // // if it exists, then containsSubject is true
+    // while ( containsSubject == false ) {
+    // message = messages[index];
+    // if ( message.getSubject() != null && message.getSubject().contains(
+    // "iTrust2 Appointment Request" ) ) {
+    // containsSubject = true;
+    // }
+    // index++;
+    // }
+    // }
+    // catch ( final Exception e ) {
+    // e.printStackTrace();
+    // }
+    // if ( containsSubject == false ) {
+    // fail( "Failed to receive email." );
+    // }
+    // }
 
     @Then ( "a declined email is sent to the user" )
     public void verifyEmailDeclined () {
@@ -489,7 +489,7 @@ public class BBTStepDefs {
         // .contains( "Invalid username and password." ) );
     }
 
-    @When ( "I try to login to iTrust as (.+) with password (.+)" )
+    @When ( "I try a second time to login to iTrust as (.+) with password (.+)" )
     public void tryToLoginSecondTime ( final String username, final String password2 ) {
         // driver.get( baseUrl );
         //
@@ -509,7 +509,7 @@ public class BBTStepDefs {
         // submit.click();
     }
 
-    @Then ( "My credentials are not correct" )
+    @Then ( "My credentials are not correct a second time" )
     public void credentialsWrongSecondTime () {
         // wait.until( ExpectedConditions.visibilityOfElementLocated(
         // By.className( "alert-error" ) ) );
@@ -518,7 +518,7 @@ public class BBTStepDefs {
         // .contains( "Invalid username and password." ) );
     }
 
-    @When ( "I try to login to iTrust as (.+) with password (.+)" )
+    @When ( "I try a third time to login to iTrust as (.+) with password (.+)" )
     public void tryToLoginThirdTime ( final String username, final String password3 ) {
         // driver.get( baseUrl );
         //
@@ -536,15 +536,6 @@ public class BBTStepDefs {
         // final WebElement submit = driver.findElement( By.className( "btn" )
         // );
         // submit.click();
-    }
-
-    @Then ( "My credentials are not correct" )
-    public void credentialsWrongThirdTime () {
-        // wait.until( ExpectedConditions.visibilityOfElementLocated(
-        // By.className( "alert-error" ) ) );
-        // assertTrue( driver.findElement( By.className( "alert-error" )
-        // ).getText()
-        // .contains( "Invalid username and password." ) );
     }
 
     @Then ( "The account is locked for one hour" )

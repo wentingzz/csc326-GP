@@ -46,9 +46,9 @@ Scenario Outline: Email sent to User locked out after 3 failed attempts
 Given The user <username> with password <correct> and the current machine has no failed login attempts
 When I try to login to iTrust as <username> with password <password1>
 Then My credentials are not correct
-When I try to login as <username> with password <password2>
-Then My credentials are not correct
-When I try to login as <username> with password <password3>
+When I try a second time to login as <username> with password <password2>
+Then My credentials are not correct a second time
+When I try a third time to login as <username> with password <password3>
 Then The account is locked for one hour
 And a lockout email is sent to the user
 #	Examples:

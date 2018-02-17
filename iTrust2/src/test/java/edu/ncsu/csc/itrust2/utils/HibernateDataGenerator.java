@@ -146,6 +146,11 @@ public class HibernateDataGenerator {
             final User pwtestuser = new User( "pwtestuser" + i,
                     "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
             pwtestuser.save();
+            final Patient pwtest = new Patient();
+            pwtest.setSelf( pwtestuser );
+            pwtest.setFirstName( "pwtest" + i );
+            pwtest.setLastName( "Smith" );
+            pwtest.setEmail( "csc326s18.203.2@gmail.com" );
         }
 
         final User lockoutUser = new User( "lockoutUser",
@@ -156,8 +161,6 @@ public class HibernateDataGenerator {
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
         lockoutUser2.save();
 
-        final User bbtUser = new User( "csc326", "redball", Role.ROLE_PATIENT, 1 );
-        bbtUser.save();
     }
 
     /**
@@ -202,6 +205,18 @@ public class HibernateDataGenerator {
         aliceBirth.add( Calendar.YEAR, -13 ); // alice is thirteen years old
         alice.setDateOfBirth( aliceBirth );
         alice.save();
+
+        final Patient csc326 = new Patient();
+        csc326.setFirstName( "csc326" );
+        final User csc326User = new User( "csc326", "redball", Role.ROLE_PATIENT, 1 );
+        csc326User.save();
+        csc326.setSelf( csc326User );
+        csc326.setLastName( "User" );
+        csc326.setEmail( "csc326s18.203.2@gmail.com" );
+        final Calendar csc326Birth = Calendar.getInstance();
+        csc326Birth.add( Calendar.YEAR, -13 );
+        csc326.setDateOfBirth( csc326Birth );
+        csc326.save();
 
         final Hospital hosp = new Hospital( "General Hospital", "123 Main St", "12345", "NC" );
         hosp.save();
