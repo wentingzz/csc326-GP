@@ -82,7 +82,8 @@ public class APIAppointmentRequestController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/appointmentrequests" )
     public ResponseEntity createAppointmentRequest ( @RequestBody final AppointmentRequestForm requestF ) {
-
+        final String name = requestF.getPatient();
+        final User user = User.getByName( name );
         try {
             final AppointmentRequest request = new AppointmentRequest( requestF );
             if ( null != AppointmentRequest.getById( request.getId() ) ) {
@@ -92,8 +93,6 @@ public class APIAppointmentRequestController extends APIController {
             }
             request.save();
             try {
-                final String name = requestF.getPatient();
-                final User user = User.getByName( name );
                 String addr = "";
                 String firstName = "";
                 final Personnel person = Personnel.getByName( user );
@@ -152,8 +151,10 @@ public class APIAppointmentRequestController extends APIController {
     @DeleteMapping ( BASE_PATH + "/appointmentrequests/{id}" )
     public ResponseEntity deleteAppointmentRequest ( @PathVariable final Long id ) {
         final AppointmentRequest request = AppointmentRequest.getById( id );
-
         if ( request == null ) {
+        final String name = request.getPatient().getUsername();
+        final User user = User.getByName( name );
+        if ( null == request ) {
             return new ResponseEntity( errorResponse( "No appointmentrequest found for id " + id ),
                     HttpStatus.NOT_FOUND );
         }
@@ -195,6 +196,30 @@ public class APIAppointmentRequestController extends APIController {
             }
 
             request.delete();
+            String addr = "";
+            String firstName = "";
+            final Personnel person = Personnel.getByName( user );
+            if ( person != null ) {
+                addr = person.getEmail();
+                firstName = person.getFirstName();
+            }
+            else {
+                final Patient patient = Patient.getPatient( user );
+                if ( patient != null ) {
+                    addr = patient.getEmail();
+                    firstName = patient.getFirstName();
+                }
+                else {
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                            "An email should have been sent to you, but there is no email associated with your account." );
+                    throw new Exception( "No Patient or Personnel on file for " + user.getId() );
+                }
+            }
+
+            String body = "Dear " + firstName + ", \n\nWe receieved your request to delete your appointment.\n";
+            body += "--iTrust2 Admin";
+            EmailUtil.sendEmail( addr, "iTrust2 Request to Delete Appointment", body );
+            LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT, "An email regarding your appointment has been sent." );
             LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_DELETED, request.getPatient(), request.getHcp() );
             return new ResponseEntity( id, HttpStatus.OK );
         }
@@ -276,7 +301,6 @@ public class APIAppointmentRequestController extends APIController {
             catch ( final NullPointerException npe ) {
                 // don't send email, continue on
             }
-
             LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_UPDATED, request.getPatient(), request.getHcp() );
             return new ResponseEntity( request, HttpStatus.OK );
 
@@ -297,7 +321,6 @@ public class APIAppointmentRequestController extends APIController {
      */
     @DeleteMapping ( BASE_PATH + "/appointmentrequests" )
     public ResponseEntity deleteAppointmentRequests () {
-
         try {
             DomainObject.deleteAll( AppointmentRequest.class );
             try {
@@ -335,7 +358,7 @@ public class APIAppointmentRequestController extends APIController {
             catch ( final NullPointerException npe ) {
                 // don't send email, continue on
             }
-
+          
             return new ResponseEntity( successResponse( "Successfully deleted all AppointmentRequests" ),
                     HttpStatus.OK );
         }
