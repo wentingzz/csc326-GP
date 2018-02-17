@@ -65,6 +65,7 @@ public class HibernateDataGenerator {
         tim.setSelf( timUser );
         tim.setFirstName( "TimTheOneYearOld" );
         tim.setLastName( "Smith" );
+        tim.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar timBirth = Calendar.getInstance();
         timBirth.add( Calendar.YEAR, -1 ); // tim is one year old
         tim.setDateOfBirth( timBirth );
@@ -77,6 +78,7 @@ public class HibernateDataGenerator {
         bobUser.save();
         bob.setSelf( bobUser );
         bob.setLastName( "Smith" );
+        bob.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar bobBirth = Calendar.getInstance();
         bobBirth.add( Calendar.YEAR, -4 ); // bob is four years old
         bob.setDateOfBirth( bobBirth );
@@ -89,6 +91,7 @@ public class HibernateDataGenerator {
         aliceUser.save();
         alice.setSelf( aliceUser );
         alice.setLastName( "Smith" );
+        alice.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar aliceBirth = Calendar.getInstance();
         aliceBirth.add( Calendar.YEAR, -13 ); // alice is thirteen years old
         alice.setDateOfBirth( aliceBirth );
@@ -110,7 +113,7 @@ public class HibernateDataGenerator {
         p.setSelf( hcp );
         p.setFirstName( "HCP" );
         p.setLastName( "HCP" );
-        p.setEmail( "csc326.201.1@gmail.com" );
+        p.setEmail( "csc326s18.203.2@gmail.com" );
         p.setAddress1( "1234 Road St." );
         p.setCity( "town" );
         p.setState( State.AK );
@@ -153,6 +156,8 @@ public class HibernateDataGenerator {
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
         lockoutUser2.save();
 
+        final User bbtUser = new User( "csc326", "redball", Role.ROLE_PATIENT, 1 );
+        bbtUser.save();
     }
 
     /**
@@ -166,6 +171,7 @@ public class HibernateDataGenerator {
         tim.setSelf( timUser );
         tim.setFirstName( "TimTheOneYearOld" );
         tim.setLastName( "Smith" );
+        tim.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar timBirth = Calendar.getInstance();
         timBirth.add( Calendar.YEAR, -1 ); // tim is one year old
         tim.setDateOfBirth( timBirth );
@@ -178,6 +184,7 @@ public class HibernateDataGenerator {
         bobUser.save();
         bob.setSelf( bobUser );
         bob.setLastName( "Smith" );
+        bob.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar bobBirth = Calendar.getInstance();
         bobBirth.add( Calendar.YEAR, -4 ); // bob is four years old
         bob.setDateOfBirth( bobBirth );
@@ -190,6 +197,7 @@ public class HibernateDataGenerator {
         aliceUser.save();
         alice.setSelf( aliceUser );
         alice.setLastName( "Smith" );
+        alice.setEmail( "csc326s18.203.2@gmail.com" );
         final Calendar aliceBirth = Calendar.getInstance();
         aliceBirth.add( Calendar.YEAR, -13 ); // alice is thirteen years old
         alice.setDateOfBirth( aliceBirth );

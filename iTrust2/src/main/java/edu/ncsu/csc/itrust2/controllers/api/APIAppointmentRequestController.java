@@ -29,6 +29,8 @@ import edu.ncsu.csc.itrust2.utils.LoggerUtil;
  * is the primary key of the appointment request in question
  *
  * @author Kai Presler-Marshall
+ * @author Natalie Landsberg
+ * @author Hannah Morrison
  *
  */
 @RestController
@@ -111,7 +113,7 @@ public class APIAppointmentRequestController extends APIController {
                                 HttpStatus.NOT_FOUND );
                     }
 
-                    if ( addr == "" || addr == null ) {
+                    if ( addr == null ) {
                         LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
                                 "An email should have been sent to you, but there is no email associated with your account." );
                     }
