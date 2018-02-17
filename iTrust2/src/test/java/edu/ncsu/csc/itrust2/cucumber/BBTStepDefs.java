@@ -47,7 +47,7 @@ public class BBTStepDefs {
         elem.sendKeys( value.toString() );
     }
 
-    // need to login as admin and create user
+    // need to login as admin and create user?
     @Given ( "I am able to log in to iTrust as (.+) with password (.+)" )
     public void login ( final String username, final String password ) {
         // driver.get( baseUrl );
@@ -383,46 +383,233 @@ public class BBTStepDefs {
 
     @When ( "I login as hcp" )
     public void loginHCP () {
-
+        // driver.get( baseUrl );
+        // final WebElement username = driver.findElement( By.name( "username" )
+        // );
+        // username.clear();
+        // username.sendKeys( "hcp" );
+        // final WebElement password = driver.findElement( By.name( "password" )
+        // );
+        // password.clear();
+        // password.sendKeys( "123456" );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
     }
 
     @When ( "I go to the View Requests page" )
     public void navViewReqs () {
-
+        // ( (JavascriptExecutor) driver ).executeScript(
+        // "document.getElementById('viewrequests').click();" );
     }
 
     @When ( "I approve the appointment request" )
     public void approveApptReq () {
+        // driver.findElement( By.name( "appointment" ) ).click();
+        // driver.findElement( By.className( "btn" ) ).click();
 
     }
 
     @Then ( "The request was successfully updated" )
     public void reqSuccUpd () {
+        // assertTrue( driver.getPageSource().contains( "Appointment request was
+        // successfully updated" ) );
 
     }
 
     @Then ( "The appointment is within the list of upcoming events" )
     public void apptInList () {
+        // driver.findElement( By.linkText( "iTrust2" ) ).click();
+        // ( (JavascriptExecutor) driver ).executeScript(
+        // "document.getElementById('upcomingrequests').click();" );
+        //
+        // final SimpleDateFormat sdf = new SimpleDateFormat( "MM/dd/yyyy",
+        // Locale.ENGLISH );
+        // final Long value = Calendar.getInstance().getTimeInMillis()
+        // + 1000 * 60 * 60 * 24 * 14; /* Two weeks */
+        // final Calendar future = Calendar.getInstance();
+        // future.setTimeInMillis( value );
+        // final String dateString = sdf.format( future.getTime() );
+        // assertTrue( driver.getPageSource().contains( dateString ) );
+        // assertTrue( driver.getPageSource().contains( "patient" ) );
 
     }
 
     @Given ( "The user (.+) with password (.+) and the current machine has no failed login attempts\n" )
-    public void noLoginAttempts () {
-
+    public void noLoginAttempts ( final String username, final String correct ) {
+        // attempts cleared by logging in
+        // driver.get( baseUrl );
+        //
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.name(
+        // "username" ) ) );
+        //
+        // final WebElement usernameField = driver.findElement( By.name(
+        // "username" ) );
+        // usernameField.clear();
+        // usernameField.sendKeys( username );
+        // final WebElement password = driver.findElement( By.name( "password" )
+        // );
+        // password.clear();
+        // password.sendKeys( correct );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
+        //
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.id(
+        // "logout" ) ) );
+        // driver.findElement( By.id( "logout" ) ).click();
     }
 
     @When ( "I try to login to iTrust as (.+) with password (.+)" )
-    public void tryToLogin () {
-
+    public void tryToLogin ( final String username, final String password1 ) {
+        // driver.get( baseUrl );
+        //
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.name(
+        // "username" ) ) );
+        //
+        // final WebElement usernameField = driver.findElement( By.name(
+        // "username" ) );
+        // usernameField.clear();
+        // usernameField.sendKeys( username );
+        // final WebElement passwordField = driver.findElement( By.name(
+        // "password" ) );
+        // passwordField.clear();
+        // passwordField.sendKeys( password1 );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
     }
 
     @Then ( "My credentials are not correct" )
     public void credentialsWrong () {
+        // wait.until( ExpectedConditions.visibilityOfElementLocated(
+        // By.className( "alert-error" ) ) );
+        // assertTrue( driver.findElement( By.className( "alert-error" )
+        // ).getText()
+        // .contains( "Invalid username and password." ) );
+    }
 
+    @When ( "I try to login to iTrust as (.+) with password (.+)" )
+    public void tryToLoginSecondTime ( final String username, final String password2 ) {
+        // driver.get( baseUrl );
+        //
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.name(
+        // "username" ) ) );
+        //
+        // final WebElement usernameField = driver.findElement( By.name(
+        // "username" ) );
+        // usernameField.clear();
+        // usernameField.sendKeys( username );
+        // final WebElement passwordField = driver.findElement( By.name(
+        // "password" ) );
+        // passwordField.clear();
+        // passwordField.sendKeys( password2 );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
+    }
+
+    @Then ( "My credentials are not correct" )
+    public void credentialsWrongSecondTime () {
+        // wait.until( ExpectedConditions.visibilityOfElementLocated(
+        // By.className( "alert-error" ) ) );
+        // assertTrue( driver.findElement( By.className( "alert-error" )
+        // ).getText()
+        // .contains( "Invalid username and password." ) );
+    }
+
+    @When ( "I try to login to iTrust as (.+) with password (.+)" )
+    public void tryToLoginThirdTime ( final String username, final String password3 ) {
+        // driver.get( baseUrl );
+        //
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.name(
+        // "username" ) ) );
+        //
+        // final WebElement usernameField = driver.findElement( By.name(
+        // "username" ) );
+        // usernameField.clear();
+        // usernameField.sendKeys( username );
+        // final WebElement passwordField = driver.findElement( By.name(
+        // "password" ) );
+        // passwordField.clear();
+        // passwordField.sendKeys( password3 );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
+    }
+
+    @Then ( "My credentials are not correct" )
+    public void credentialsWrongThirdTime () {
+        // wait.until( ExpectedConditions.visibilityOfElementLocated(
+        // By.className( "alert-error" ) ) );
+        // assertTrue( driver.findElement( By.className( "alert-error" )
+        // ).getText()
+        // .contains( "Invalid username and password." ) );
     }
 
     @Then ( "The account is locked for one hour" )
     public void acctLockedOneHr () {
+        // wait.until( ExpectedConditions.visibilityOfElementLocated(
+        // By.className( "alert-error" ) ) );
+        // assertTrue( driver.findElement( By.className( "alert-error" )
+        // ).getText()
+        // .contains( "Too many invalid logins. Account locked for 1 hour." ) );
+    }
+
+    @Then ( "a lockout email is sent to the user" )
+    public void lockoutEmailSent () {
+        // final String username = "csc326s18.203.2@gmail.com";
+        // final String password = "greenball";
+        // final String host = "pop.gmail.com";
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
+        // try {
+        // // create properties field
+        // final Properties properties = new Properties();
+        // properties.put( "mail.store.protocol", "pop3" );
+        // properties.put( "mail.pop3.host", host );
+        // properties.put( "mail.pop3.port", "995" );
+        // properties.put( "mail.pop3.starttls.enable", "true" );
+        // final Session emailSession = Session.getDefaultInstance( properties
+        // );
+        // // emailSession.setDebug(true);
+        //
+        // // create the POP3 store object and connect with the pop server
+        // final Store store = emailSession.getStore( "pop3s" );
+        //
+        // store.connect( host, username, password );
+        //
+        // // create the folder object and open it
+        // final Folder emailFolder = store.getFolder( "INBOX" );
+        // emailFolder.open( Folder.READ_WRITE );
+        //
+        // // retrieve the messages from the folder in an array and print it
+        // final Message[] messages = emailFolder.getMessages();
+        // Arrays.sort( messages, ( x, y ) -> {
+        // try {
+        // return y.getSentDate().compareTo( x.getSentDate() );
+        // }
+        // catch ( final MessagingException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // return 0;
+        // } );
+        // for ( final Message message : messages ) {
+        // // SUBJECT
+        // if ( containsSubject == false && message.getSubject() != null
+        // && message.getSubject().contains( "iTrust2 Lockout Notification" ) )
+        // {
+        // containsSubject = true;
+        // }
+        // }
+        // }
+        // catch ( final Exception e ) {
+        // e.printStackTrace();
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
+        // }
 
     }
 
