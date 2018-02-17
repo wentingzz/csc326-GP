@@ -1,4 +1,5 @@
 #Author Natalie Landsberg nslandsb
+#Author Hannah Morrison hmorris3
 
 Feature: Change or Reset password send email
 	As an iTrust2 user
@@ -13,7 +14,7 @@ Then My password is updated successfully
 And a password email is sent to the patient
 #Examples:
 #	|username   |password|newPassword|email	|
-#	|csc326     |redball	|yellowball	|csc326GP-203-2@gmail.com	|
+#	|csc326     |redball	|yellowball	|csc326s18.203.2@gmail.com	|
 
 Scenario: Appointment declined
 Given I am able to log in to iTrust as <username> with password <password>

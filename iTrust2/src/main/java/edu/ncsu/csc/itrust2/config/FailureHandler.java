@@ -111,12 +111,52 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                         if ( person != null ) {
                             addrEmail = person.getEmail();
                             firstName = person.getFirstName();
+                          
+                            if ( addrEmail == null) {
+                                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                                            "An email should have been sent to you, but there is no email associated with your account." );
+                                LoggerUtil.log( TransactionType.USER_LOCKOUT, username, null,
+                                            username + " has been locked out for 1 hour." );
+                                this.getRedirectStrategy().sendRedirect( request, response, "/login?locked" );
+                            }
+                            else {
+                               String body = "Dear " + firstName
+                                      + ", \n\nThis email is to notify you that your account has been locked after 3 unsuccessful login attempts from your user ID. \n";
+                              body += "--iTrust2 Staff";
+                              try {
+                                  EmailUtil.sendEmail( addrEmail, "iTrust2 Lockout Notification", body );
+                              }
+                              catch ( final MessagingException e ) {
+                                  // TODO Auto-generated catch block
+                                  e.printStackTrace();
+                              }
+                            }
                         }
                         else {
                             final Patient patient = Patient.getPatient( user );
                             if ( patient != null ) {
                                 addrEmail = patient.getEmail();
                                 firstName = patient.getFirstName();
+
+                                if ( addrEmail == null ) {
+                                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                                            "An email should have been sent to you, but there is no email associated with your account." );
+                                    LoggerUtil.log( TransactionType.USER_LOCKOUT, username, null,
+                                            username + " has been locked out for 1 hour." );
+                                    this.getRedirectStrategy().sendRedirect( request, response, "/login?locked" );
+                                }
+                                else {
+                                    String body = "Dear " + firstName
+                                            + ", \n\nThis email is to notify you that your account has been locked after 3 unsuccessful login attempts from your user ID. \n";
+                                    body += "--iTrust2 Staff";
+                                    try {
+                                        EmailUtil.sendEmail( addrEmail, "iTrust2 Lockout Notification", body );
+                                    }
+                                    catch ( final MessagingException e ) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                }
                             }
                             else {
                                 LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
@@ -131,16 +171,6 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                             }
                         }
 
-                        String body = "Dear " + firstName
-                                + ", \n\nThis email is to notify you that your account has been locked after 3 unsuccessful login attempts from your user ID. \n";
-                        body += "--iTrust2 Staff";
-                        try {
-                            EmailUtil.sendEmail( addrEmail, "iTrust2 Appointment Request", body );
-                        }
-                        catch ( final MessagingException e ) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
                         LoggerUtil.log( TransactionType.USER_LOCKOUT, username, null,
                                 username + " has been locked out for 1 hour." );
                         this.getRedirectStrategy().sendRedirect( request, response, "/login?locked" );

@@ -1,7 +1,5 @@
 package edu.ncsu.csc.itrust2.cucumber;
 
-import static org.junit.Assert.assertTrue;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -33,7 +31,7 @@ public class BBTStepDefs {
     @Before
     public void setup () {
         driver = new HtmlUnitDriver( true );
-        wait = new WebDriverWait( driver, 5 );
+        wait = new WebDriverWait( driver, 30 );
 
         HibernateDataGenerator.generateUsers();
     }
@@ -49,6 +47,7 @@ public class BBTStepDefs {
         elem.sendKeys( value.toString() );
     }
 
+    // need to login as admin and create user
     @Given ( "I am able to log in to iTrust as (.+) with password (.+)" )
     public void login ( final String username, final String password ) {
         // driver.get( baseUrl );
@@ -70,7 +69,7 @@ public class BBTStepDefs {
 
     @When ( "I fill out the page's form with current password (.+) and new password (.+)" )
     public void fillChangePassword ( final String password, final String newPassword ) {
-        // Wait until page loads
+        // // Wait until page loads
         // wait.until( ExpectedConditions.visibilityOfElementLocated( By.name(
         // "currentPW" ) ) );
         //
@@ -106,10 +105,11 @@ public class BBTStepDefs {
     // TODO verify this works
     @Then ( "an approved email is sent to the user" )
     public void verifyEmailApproved () {
-        // final String username = "csc326.201.1@gmail.com";
-        // final String password = "iTrust2Admin123456";
+        // final String username = "csc326s18.203.2@gmail.com";
+        // final String password = "greenball";
         // final String host = "pop.gmail.com";
-        // PasswordResetToken token = null;
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
         // try {
         // // create properties field
         // final Properties properties = new Properties();
@@ -144,77 +144,240 @@ public class BBTStepDefs {
         // } );
         // for ( final Message message : messages ) {
         // // SUBJECT
-        // if ( message.getSubject() != null && message.getSubject().contains(
-        // "iTrust2 Password Reset" ) ) {
-        // String content = (String) message.getContent();
-        // content = content.replaceAll( "\r", "" ); // Windows
-        // content = content.substring( content.indexOf( "?tkid=" ) );
-        //
-        // final Scanner scan = new Scanner( content.substring( 6,
-        // content.indexOf( '\n' ) ) );
-        // System.err.println( "token(" + content.substring( 6, content.indexOf(
-        // '\n' ) ) + ")end" );
-        // final long tokenId = scan.nextLong();
-        // scan.close();
-        //
-        // content = content.substring( content.indexOf( "temporary password: "
-        // ) );
-        // content = content.substring( 20, content.indexOf( "\n" ) );
-        // content.trim();
-        //
-        // if ( content.endsWith( "\n" ) ) {
-        // content = content.substring( content.length() - 1 );
-        // }
-        //
-        // token = new PasswordResetToken();
-        // token.setId( tokenId );
-        // token.setTempPasswordPlaintext( content );
-        // break;
+        // if ( containsSubject == false && message.getSubject() != null
+        // && message.getSubject().contains( "iTrust2 Appointment Request" ) ) {
+        // containsSubject = true;
         // }
         // }
-        //
-        // // close the store and folder objects
-        // emailFolder.close( false );
-        // store.close();
-        // // return token;
         // }
         // catch ( final Exception e ) {
         // e.printStackTrace();
-        // // return null;
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
         // }
     }
 
     @Then ( "a lockout email is sent to the user" )
     public void verifyEmailLockout () {
+        // final String username = "csc326s18.203.2@gmail.com";
+        // final String password = "greenball";
+        // final String host = "pop.gmail.com";
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
+        // int index = 0;
+        // try {
+        // // create properties field
+        // final Properties properties = new Properties();
+        // properties.put( "mail.store.protocol", "pop3" );
+        // properties.put( "mail.pop3.host", host );
+        // properties.put( "mail.pop3.port", "995" );
+        // properties.put( "mail.pop3.starttls.enable", "true" );
+        // final Session emailSession = Session.getDefaultInstance( properties
+        // );
+        // // emailSession.setDebug(true);
+        //
+        // // create the POP3 store object and connect with the pop server
+        // final Store store = emailSession.getStore( "pop3s" );
+        //
+        // store.connect( host, username, password );
+        //
+        // // create the folder object and open it
+        // final Folder emailFolder = store.getFolder( "INBOX" );
+        // emailFolder.open( Folder.READ_WRITE );
+        //
+        // // retrieve the messages from the folder in an array and print it
+        // final Message[] messages = emailFolder.getMessages();
+        // Arrays.sort( messages, ( x, y ) -> {
+        // try {
+        // return y.getSentDate().compareTo( x.getSentDate() );
+        // }
+        // catch ( final MessagingException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // return 0;
+        // } );
+        // Message message;
+        // // go through emails, looking for the subject line we want;
+        // // if it exists, then containsSubject is true
+        // while ( containsSubject == false ) {
+        // message = messages[index];
+        // if ( message.getSubject() != null && message.getSubject().contains(
+        // "iTrust2 Appointment Request" ) ) {
+        // containsSubject = true;
+        // }
+        // index++;
+        // }
+        // }
+        // catch ( final Exception e ) {
+        // e.printStackTrace();
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
+        // }
     }
 
     @Then ( "a declined email is sent to the user" )
     public void verifyEmailDeclined () {
-
+        // final String username = "csc326s18.203.2@gmail.com";
+        // final String password = "greenball";
+        // final String host = "pop.gmail.com";
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
+        // try {
+        // // create properties field
+        // final Properties properties = new Properties();
+        // properties.put( "mail.store.protocol", "pop3" );
+        // properties.put( "mail.pop3.host", host );
+        // properties.put( "mail.pop3.port", "995" );
+        // properties.put( "mail.pop3.starttls.enable", "true" );
+        // final Session emailSession = Session.getDefaultInstance( properties
+        // );
+        // // emailSession.setDebug(true);
+        //
+        // // create the POP3 store object and connect with the pop server
+        // final Store store = emailSession.getStore( "pop3s" );
+        //
+        // store.connect( host, username, password );
+        //
+        // // create the folder object and open it
+        // final Folder emailFolder = store.getFolder( "INBOX" );
+        // emailFolder.open( Folder.READ_WRITE );
+        //
+        // // retrieve the messages from the folder in an array and print it
+        // final Message[] messages = emailFolder.getMessages();
+        // Arrays.sort( messages, ( x, y ) -> {
+        // try {
+        // return y.getSentDate().compareTo( x.getSentDate() );
+        // }
+        // catch ( final MessagingException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // return 0;
+        // } );
+        // for ( final Message message : messages ) {
+        // // SUBJECT
+        // if ( containsSubject == false && message.getSubject() != null
+        // && message.getSubject().contains( "iTrust2 Appointment Request" ) ) {
+        // containsSubject = true;
+        // }
+        // }
+        // }
+        // catch ( final Exception e ) {
+        // e.printStackTrace();
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
+        // }
     }
 
     @Then ( "a password email is sent to the patient" )
     public void verifyEmailPassword () {
+        // final String username = "csc326s18.203.2@gmail.com";
+        // final String password = "greenball";
+        // final String host = "pop.gmail.com";
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
+        // try {
+        // // create properties field
+        // final Properties properties = new Properties();
+        // properties.put( "mail.store.protocol", "pop3" );
+        // properties.put( "mail.pop3.host", host );
+        // properties.put( "mail.pop3.port", "995" );
+        // properties.put( "mail.pop3.starttls.enable", "true" );
+        // final Session emailSession = Session.getDefaultInstance( properties
+        // );
+        // // emailSession.setDebug(true);
+        //
+        // // create the POP3 store object and connect with the pop server
+        // final Store store = emailSession.getStore( "pop3s" );
+        //
+        // store.connect( host, username, password );
+        //
+        // // create the folder object and open it
+        // final Folder emailFolder = store.getFolder( "INBOX" );
+        // emailFolder.open( Folder.READ_WRITE );
+        //
+        // // retrieve the messages from the folder in an array and print it
+        // final Message[] messages = emailFolder.getMessages();
+        // Arrays.sort( messages, ( x, y ) -> {
+        // try {
+        // return y.getSentDate().compareTo( x.getSentDate() );
+        // }
+        // catch ( final MessagingException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // return 0;
+        // } );
+        // for ( final Message message : messages ) {
+        // // SUBJECT
+        // if ( containsSubject == false && message.getSubject() != null
+        // && message.getSubject().contains( "iTrust2 Password Reset" ) ) {
+        // containsSubject = true;
+        // }
+        // }
+        // }
+        // catch ( final Exception e ) {
+        // e.printStackTrace();
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
+        // }
 
     }
 
     @When ( "I go to the Request Appointment page" )
     public void navReqAppt () {
-        assertTrue( true );
+        // ( (JavascriptExecutor) driver ).executeScript(
+        // "document.getElementById('requestappointment').click();" );
+        // assertTrue( true );
     }
 
     @When ( "I fill in values for the Appointment Request Fields" )
     public void fillValsApptReq () {
-
+        // final WebElement date = driver.findElement( By.id( "date" ) );
+        // date.clear();
+        // final SimpleDateFormat sdf = new SimpleDateFormat( "MM/dd/yyyy",
+        // Locale.ENGLISH );
+        // final Long value = Calendar.getInstance().getTimeInMillis()
+        // + 1000 * 60 * 60 * 24 * 14; /* Two weeks */
+        // final Calendar future = Calendar.getInstance();
+        // future.setTimeInMillis( value );
+        // date.sendKeys( sdf.format( future.getTime() ) );
+        // final WebElement time = driver.findElement( By.id( "time" ) );
+        // time.clear();
+        // time.sendKeys( "12:30 PM" );
+        // final WebElement comments = driver.findElement( By.id( "comments" )
+        // );
+        // comments.clear();
+        // comments.sendKeys( "Test appointment please ignore" );
+        // driver.findElement( By.className( "btn" ) ).click();
     }
 
     @Then ( "The appointment was requested successfully" )
     public void verifyApptReq () {
+        // assertTrue( driver.getPageSource().contains( "Your appointment has
+        // been requested successfully" ) );
 
     }
 
     @Then ( "The appointment can be found within the list" )
     public void foundAppt () {
+        // driver.findElement( By.linkText( "iTrust2" ) ).click();
+        // ( (JavascriptExecutor) driver ).executeScript(
+        // "document.getElementById('viewrequests-patient').click();" );
+        //
+        // final SimpleDateFormat sdf = new SimpleDateFormat( "MM/dd/yyyy",
+        // Locale.ENGLISH );
+        // final Long value = Calendar.getInstance().getTimeInMillis()
+        // + 1000 * 60 * 60 * 24 * 14; /* Two weeks */
+        // final Calendar future = Calendar.getInstance();
+        // future.setTimeInMillis( value );
+        // final String dateString = sdf.format( future.getTime() );
+        // assertTrue( driver.getPageSource().contains( dateString ) );
 
     }
 

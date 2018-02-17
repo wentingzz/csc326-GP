@@ -135,7 +135,7 @@ public class APIPasswordTest {
         personnel.setAddress1( "1 Test Street" );
         personnel.setAddress2( "Address Part 2" );
         personnel.setCity( "Prag" );
-        personnel.setEmail( "csc326.201.1@gmail.com" );
+        personnel.setEmail( "csc326s18.203.2@gmail.com" );
         personnel.setFirstName( "Test" );
         personnel.setLastName( "HCP" );
         personnel.setPhone( "123-456-7890" );
@@ -201,7 +201,7 @@ public class APIPasswordTest {
         patient.setAddress1( "1 Test Street" );
         patient.setAddress2( "Address Part 2" );
         patient.setCity( "Prag" );
-        patient.setEmail( "csc326.203.2@gmail.com" );
+        patient.setEmail( "csc326s18.203.2@gmail.com" );
         patient.setFirstName( "Test" );
         patient.setLastName( "HCP" );
         patient.setPhone( "123-456-7890" );
@@ -220,7 +220,7 @@ public class APIPasswordTest {
 
         // test the reset request for a known user
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
-                .content( "patientPW2" ) ).andExpect( status().is5xxServerError() );
+                .content( "patientPW2" ) ).andExpect( status().isOk() );
 
         final Personnel p = Personnel.getByName( user );
         p.delete();
