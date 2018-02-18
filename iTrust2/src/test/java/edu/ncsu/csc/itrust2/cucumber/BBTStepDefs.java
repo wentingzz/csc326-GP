@@ -1,17 +1,27 @@
 package edu.ncsu.csc.itrust2.cucumber;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
+import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust2.models.persistent.PasswordResetToken;
+import edu.ncsu.csc.itrust2.models.persistent.User;
 import edu.ncsu.csc.itrust2.utils.HibernateDataGenerator;
 
 /**
@@ -97,15 +107,71 @@ public class BBTStepDefs {
         // driver.findElement( By.id( "logout" ) ).click();
     }
 
+    @And ( "a password email is sent to the patient with address (.+)" )
+    public void verifyEmailPassword ( final String emailAddress ) {
+        // final String username = emailAddress;
+        // final String password = "greenball";
+        // final String host = "pop.gmail.com";
+        // final PasswordResetToken token = null;
+        // boolean containsSubject = false;
+        // try {
+        // // create properties field
+        // final Properties properties = new Properties();
+        // properties.put( "mail.store.protocol", "pop3" );
+        // properties.put( "mail.pop3.host", host );
+        // properties.put( "mail.pop3.port", "995" );
+        // properties.put( "mail.pop3.starttls.enable", "true" );
+        // final Session emailSession = Session.getDefaultInstance( properties
+        // );
+        // // emailSession.setDebug(true);
+        //
+        // // create the POP3 store object and connect with the pop server
+        // final Store store = emailSession.getStore( "pop3s" );
+        //
+        // store.connect( host, username, password );
+        //
+        // // create the folder object and open it
+        // final Folder emailFolder = store.getFolder( "INBOX" );
+        // emailFolder.open( Folder.READ_WRITE );
+        //
+        // // retrieve the messages from the folder in an array and print it
+        // final Message[] messages = emailFolder.getMessages();
+        // Arrays.sort( messages, ( x, y ) -> {
+        // try {
+        // return y.getSentDate().compareTo( x.getSentDate() );
+        // }
+        // catch ( final MessagingException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        // return 0;
+        // } );
+        // for ( final Message message : messages ) {
+        // // SUBJECT
+        // if ( containsSubject == false && message.getSubject() != null
+        // && message.getSubject().contains( "iTrust2 Password Reset" ) ) {
+        // containsSubject = true;
+        // }
+        // }
+        // }
+        // catch ( final Exception e ) {
+        // e.printStackTrace();
+        // }
+        // if ( containsSubject == false ) {
+        // fail( "Failed to receive email." );
+        // }
+
+    }
+
     /*
      * Credit for checking email:
      * https://www.tutorialspoint.com/javamail_api/javamail_api_checking_emails.
      * htm
      */
     // TODO verify this works
-    @Then ( "an approved email is sent to the user" )
-    public void verifyEmailApproved () {
-        // final String username = "csc326s18.203.2@gmail.com";
+    @And ( "an approved email is sent to the user with address <email>" )
+    public void verifyEmailApproved ( final String emailAddress ) {
+        // final String username = emailAddress;
         // final String password = "greenball";
         // final String host = "pop.gmail.com";
         // final PasswordResetToken token = null;
@@ -218,9 +284,9 @@ public class BBTStepDefs {
     // }
     // }
 
-    @Then ( "a declined email is sent to the user" )
-    public void verifyEmailDeclined () {
-        // final String username = "csc326s18.203.2@gmail.com";
+    @Then ( "a declined email is sent to the user with address <email>" )
+    public void verifyEmailDeclined ( final String emailAddress ) {
+        // final String username = emailAddress
         // final String password = "greenball";
         // final String host = "pop.gmail.com";
         // final PasswordResetToken token = null;
@@ -271,62 +337,6 @@ public class BBTStepDefs {
         // if ( containsSubject == false ) {
         // fail( "Failed to receive email." );
         // }
-    }
-
-    @Then ( "a password email is sent to the patient" )
-    public void verifyEmailPassword () {
-        // final String username = "csc326s18.203.2@gmail.com";
-        // final String password = "greenball";
-        // final String host = "pop.gmail.com";
-        // final PasswordResetToken token = null;
-        // boolean containsSubject = false;
-        // try {
-        // // create properties field
-        // final Properties properties = new Properties();
-        // properties.put( "mail.store.protocol", "pop3" );
-        // properties.put( "mail.pop3.host", host );
-        // properties.put( "mail.pop3.port", "995" );
-        // properties.put( "mail.pop3.starttls.enable", "true" );
-        // final Session emailSession = Session.getDefaultInstance( properties
-        // );
-        // // emailSession.setDebug(true);
-        //
-        // // create the POP3 store object and connect with the pop server
-        // final Store store = emailSession.getStore( "pop3s" );
-        //
-        // store.connect( host, username, password );
-        //
-        // // create the folder object and open it
-        // final Folder emailFolder = store.getFolder( "INBOX" );
-        // emailFolder.open( Folder.READ_WRITE );
-        //
-        // // retrieve the messages from the folder in an array and print it
-        // final Message[] messages = emailFolder.getMessages();
-        // Arrays.sort( messages, ( x, y ) -> {
-        // try {
-        // return y.getSentDate().compareTo( x.getSentDate() );
-        // }
-        // catch ( final MessagingException e ) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // return 0;
-        // } );
-        // for ( final Message message : messages ) {
-        // // SUBJECT
-        // if ( containsSubject == false && message.getSubject() != null
-        // && message.getSubject().contains( "iTrust2 Password Reset" ) ) {
-        // containsSubject = true;
-        // }
-        // }
-        // }
-        // catch ( final Exception e ) {
-        // e.printStackTrace();
-        // }
-        // if ( containsSubject == false ) {
-        // fail( "Failed to receive email." );
-        // }
-
     }
 
     @When ( "I go to the Request Appointment page" )
@@ -547,9 +557,9 @@ public class BBTStepDefs {
         // .contains( "Too many invalid logins. Account locked for 1 hour." ) );
     }
 
-    @Then ( "a lockout email is sent to the user" )
-    public void lockoutEmailSent () {
-        // final String username = "csc326s18.203.2@gmail.com";
+    @Then ( "a lockout email is sent to the user with address <email>" )
+    public void lockoutEmailSent ( final String emailAddress ) {
+        // final String username = emailAddress;
         // final String password = "greenball";
         // final String host = "pop.gmail.com";
         // final PasswordResetToken token = null;
@@ -605,43 +615,82 @@ public class BBTStepDefs {
     }
 
     @Given ( "The user does not already exist in my database" )
-    public void userNotInDatabase () {
-
+    public void userNotInDatabase ( final String username ) {
+        final List<User> users = User.getUsers();
+        for ( final User user : users ) {
+            if ( user.getUsername().equals( username ) ) {
+                try {
+                    user.delete();
+                }
+                catch ( final Exception e ) {
+                    Assert.fail();
+                }
+            }
+        }
     }
 
     @When ( "I login as admin" )
     public void loginAdmin () {
+        driver.get( baseUrl );
+        final WebElement username = driver.findElement( By.name( "username" ) );
+        username.clear();
+        username.sendKeys( "admin" );
+        final WebElement password = driver.findElement( By.name( "password" ) );
+        password.clear();
+        password.sendKeys( "123456" );
+        final WebElement submit = driver.findElement( By.className( "btn" ) );
+        submit.click();
 
     }
 
     @When ( "I go to the add user page" )
     public void navAddUser () {
-
+        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
     public void fillAddUserForm ( final String username, final String password ) {
+        final WebElement un = driver.findElement( By.id( "username" ) );
+        un.clear();
+        un.sendKeys( username );
 
+        final WebElement pw = driver.findElement( By.id( "password" ) );
+        pw.clear();
+        pw.sendKeys( password );
+
+        final Select role = new Select( driver.findElement( By.id( "role" ) ) );
+        role.selectByVisibleText( "ROLE_HCP" );
+
+        final WebElement enabled = driver.findElement( By.className( "checkbox" ) );
+        enabled.click();
+
+        driver.findElement( By.className( "btn" ) ).click();
     }
 
     @Then ( "The user was created successfully" )
     public void userCreateSucc () {
+        assertTrue( driver.getPageSource().contains( "User added successfully" ) );
 
     }
 
     @Then ( "My password is updated unsuccessfully" )
     public void unsuccPassUpd () {
+        assertFalse( driver.getPageSource().contains( "Password changed successfully" ) );
 
     }
 
-    @Then ( "I am returned to the homepage" )
+    @And ( "I am returned to the homepage" )
     public void etPhoneHome () {
+        // this is on the homepage
+        assertTrue( driver.getPageSource().contains( "Welcome to iTrust2" ) );
 
     }
 
     @Then ( "the homepage shows the access logs with 4 log entries" )
     public void showFourLogs () {
-
+        // if the log is on the home page, then it will show up in the home
+        // page's source
+        driver.getPageSource().contains( "activitylog" );
     }
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )

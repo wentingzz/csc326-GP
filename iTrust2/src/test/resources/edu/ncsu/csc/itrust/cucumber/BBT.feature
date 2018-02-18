@@ -11,7 +11,7 @@ Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
 When I fill out the page's form with current password <password> and new password <newPassword>
 Then My password is updated successfully
-And a password email is sent to the patient
+And a password email is sent to the patient with address <email>
 #Examples:
 #	|username   |password|newPassword|email	|
 #	|csc326     |redball	|yellowball	|csc326s18.203.2@gmail.com	|
@@ -27,8 +27,10 @@ And I go to the View Requests page
 And I approve the appointment request
 Then The request was successfully updated
 And The appointment is in the list of upcoming events 
-And a declined email is sent to the user
-
+And a declined email is sent to the user with address <email>
+#Examples:
+#	|username   |password|email	|
+#	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
 Scenario: Appointment approved
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the Request Appointment page
@@ -40,8 +42,10 @@ And I go to the View Requests page
 And I approve the appointment request
 Then The request was successfully updated
 And The appointment is within the list of upcoming events 
-And an approved email is sent to the user
-
+And an approved email is sent to the user with address <email>
+#Examples:
+#	|username   |password|email	|
+#	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
 Scenario Outline: Email sent to User locked out after 3 failed attempts
 Given The user <username> with password <correct> and the current machine has no failed login attempts
 When I try to login to iTrust as <username> with password <password1>
@@ -50,7 +54,7 @@ When I try a second time to login as <username> with password <password2>
 Then My credentials are not correct a second time
 When I try a third time to login as <username> with password <password3>
 Then The account is locked for one hour
-And a lockout email is sent to the user
+And a lockout email is sent to the user with address <email>
 #	Examples:
 #	|username   |password1|password2	|password3	|correct		|
 #	|csc326		|redball  |redBALL	|reDBALL		|yellowball	|
