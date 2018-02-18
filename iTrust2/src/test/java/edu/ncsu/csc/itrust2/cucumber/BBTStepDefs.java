@@ -54,7 +54,7 @@ public class BBTStepDefs {
     @Before
     public void setup () {
         driver = new HtmlUnitDriver( true );
-        wait = new WebDriverWait( driver, 30 );
+        wait = new WebDriverWait( driver, 5 );
 
         HibernateDataGenerator.generateUsers();
     }
