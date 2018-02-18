@@ -71,13 +71,7 @@ public class APIPasswordController extends APIController {
                         addr = patient.getEmail();
                         firstName = patient.getFirstName();
                     }
-                    else {
-                        LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
-                                "An email should have been sent to you, but there is no email associated with your account." );
-                        throw new Exception( "No Patient or Personnel on file for " + user.getId() );
-                    }
                 }
-
 
                 if ( addr == null ) {
                     LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
@@ -147,15 +141,18 @@ public class APIPasswordController extends APIController {
                     addr = patient.getEmail();
                     firstName = patient.getFirstName();
                 }
-                else {
-                    throw new Exception( "No Patient or Personnel on file for " + user.getId() );
-                }
             }
 
-            String body = "Hello " + firstName + ", \n\nWe receieved a request to reset your password.\n";
-            body += "Go to " + link + "\nand use the reset token: " + token.getTempPasswordPlaintext() + "\n";
-            body += "\nIf you did not request a password reset, please contact a system administrator.\n\n--iTrust2 Admin";
-            EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+            if ( addr == null ) {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+            }
+            else {
+                String body = "Hello " + firstName + ", \n\nWe receieved a request to reset your password.\n";
+                body += "Go to " + link + "\nand use the reset token: " + token.getTempPasswordPlaintext() + "\n";
+                body += "\nIf you did not request a password reset, please contact a system administrator.\n\n--iTrust2 Admin";
+                EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+            }
 
             LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
                     "Successfully changed password for user " + user.getUsername() );
@@ -204,17 +201,19 @@ public class APIPasswordController extends APIController {
                         addr = patient.getEmail();
                         firstName = patient.getFirstName();
                     }
-                    else {
-                        LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
-                                "An email should have been sent to you, but there is no email associated with your account." );
-                        throw new Exception( "No Patient or Personnel on file for " + user.getId() );
-                    }
                 }
 
-                String body = "Hello " + firstName
-                        + ", \n\nYour password has been reset. If you did not make this change, please contact us.\n";
-                body += "\n\n--iTrust2 Staff";
-                EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+                if ( addr == null ) {
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                            "An email should have been sent to you, but there is no email associated with your account." );
+                }
+                else {
+                    String body = "Hello " + firstName
+                            + ", \n\nYour password has been reset. If you did not make this change, please contact us.\n";
+                    body += "\n\n--iTrust2 Staff";
+                    EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+                }
+
                 user.setPassword( pe.encode( form.getNewPassword() ) );
                 user.save();
                 token.delete();

@@ -145,21 +145,28 @@ public class HibernateDataGenerator {
         for ( int i = 1; i <= 5; i++ ) {
             final User pwtestuser = new User( "pwtestuser" + i,
                     "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
-            pwtestuser.save();
-            final Patient pwtest = new Patient();
+            final Personnel pwtest = new Personnel();
             pwtest.setSelf( pwtestuser );
             pwtest.setFirstName( "pwtest" + i );
             pwtest.setLastName( "Smith" );
             pwtest.setEmail( "csc326s18.203.2@gmail.com" );
+            pwtest.save();
+
         }
 
         final User lockoutUser = new User( "lockoutUser",
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
-        lockoutUser.save();
+        final Personnel lockout1 = new Personnel();
+        lockout1.setSelf( lockoutUser );
+        lockout1.setEmail( "csc326s18.203.2@gmail.com" );
+        lockout1.save();
 
         final User lockoutUser2 = new User( "lockoutUser2",
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
-        lockoutUser2.save();
+        final Personnel lockout2 = new Personnel();
+        lockout2.setSelf( lockoutUser2 );
+        lockout2.setEmail( "csc326s18.203.2@gmail.com" );
+        lockout2.save();
 
     }
 
