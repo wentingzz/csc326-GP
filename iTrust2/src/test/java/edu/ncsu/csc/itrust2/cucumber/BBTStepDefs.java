@@ -496,7 +496,7 @@ public class BBTStepDefs {
         submit.click();
     }
 
-    @Then ( "My credentials are not correct a second time" )
+    @Then ( "My credentials are not correct for the second time" )
     public void credentialsWrongSecondTime () {
         wait.until( ExpectedConditions.visibilityOfElementLocated( By.className( "alert-error" ) ) );
         assertTrue( driver.findElement( By.className( "alert-error" ) ).getText()
@@ -657,6 +657,7 @@ public class BBTStepDefs {
     public void showFourLogs () {
         // if the log is on the home page, then it will show up in the home
         // page's source
+        // TODO add check for the 4 log entries, maybe get table elements?
         driver.getPageSource().contains( "activitylog" );
     }
 

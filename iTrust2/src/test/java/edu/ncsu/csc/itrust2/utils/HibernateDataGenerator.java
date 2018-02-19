@@ -145,7 +145,7 @@ public class HibernateDataGenerator {
         // generate users for testing password change & reset
         for ( int i = 1; i <= 5; i++ ) {
             final User pwtestuser = new User( "pwtestuser" + i,
-                    "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
+                    "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_PATIENT, 1 );
             pwtestuser.save();
             final Patient pwtest = new Patient();
             pwtest.setSelf( pwtestuser );
@@ -219,7 +219,7 @@ public class HibernateDataGenerator {
 
         final Patient csc326 = new Patient();
         csc326.setFirstName( "csc326" );
-        final User csc326User = new User( "csc326", "$2a$10$YWzME.1YaJ4fKeeO2dMlgOQA2XdyD.Tmgra5zNM3D09K49QOghEou",
+        final User csc326User = new User( "csc326", "$2a$10$5jTB5kleSjHvOVx5x1YOXe0j/Z/m6RdsCuWoszvGrsTHr157FvC.W",
                 Role.ROLE_PATIENT, 1 );
         csc326User.save();
         csc326.setSelf( csc326User );

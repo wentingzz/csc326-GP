@@ -32,7 +32,7 @@ And a declined email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
 	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
-	|pwtestuser2|123456  | csc326s18.203.2@gmail.com    |
+#	|pwtestuser2|123456  | csc326s18.203.2@gmail.com    |
 	
 Scenario Outline: Appointment approved
 Given I am able to log in to iTrust as <username> with password <password>
@@ -49,21 +49,21 @@ And an approved email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
 	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
-    |pwtestuser2|123456  |csc326s18.203.2@gmail.com    |
+#    |pwtestuser2|123456  |csc326s18.203.2@gmail.com    |
     
 Scenario Outline: Email sent to User locked out after 3 failed attempts
 Given The user <username> with password <correct> and the current machine has no failed login attempts
 When I try to login to iTrust as <username> with password <password1>
 Then My credentials are not correct
 When I try a second time to login as <username> with password <password2>
-Then My credentials are not correct a second time
+Then My credentials are not correct for the second time
 When I try a third time to login as <username> with password <password3>
 Then The account is locked for one hour
 And a lockout email is sent to the user with address <email>
 Examples:
 	|username   |password1|password2	|password3	|correct    | email |
 	|csc326		|redball  |redBALL	|reDBALL		|yellowball	|csc326s18.203.2@gmail.com |
-	|pwtestuser2|123457  |654321         |1254321 |1234567 | csc326s18.203.2@gmail.com    |
+#	|pwtestuser2|123457  |654321         |1254321 |1234567 | csc326s18.203.2@gmail.com    |
 
 Scenario Outline: Change password without email on file
 Given The user does not already exist in my database
