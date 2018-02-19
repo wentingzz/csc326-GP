@@ -83,4 +83,9 @@ public class APILogEntryController extends APIController {
             return list;
         }
     }
+
+    @GetMapping ( BASE_PATH + "/logentriesaccrole" )
+    public int getAccRole () {
+        return User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() ).getRole().getCode();
+    }
 }
