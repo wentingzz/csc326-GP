@@ -1,14 +1,18 @@
 package edu.ncsu.csc.itrust2.controllers.api;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.itrust2.models.persistent.LogEntry;
+import edu.ncsu.csc.itrust2.models.persistent.User;
 
 /**
  * REST controller for interacting with Log Entry-related endpoints This will
@@ -30,7 +34,9 @@ public class APILogEntryController extends APIController {
      */
     @GetMapping ( BASE_PATH + "/logentries" )
     public List<LogEntry> getLogEntries () {
-        return LogEntry.getLogEntries();
+        final List<LogEntry> allLogs = LogEntry.getLogEntries();
+        Collections.reverse( allLogs );
+        return allLogs;
     }
 
     /**
@@ -49,4 +55,37 @@ public class APILogEntryController extends APIController {
                 : new ResponseEntity( entry, HttpStatus.OK );
     }
 
+    /**
+     * Get all log entries for a specified user
+     *
+     * @return all logs for that user
+     */
+    @GetMapping ( BASE_PATH + "/logentriesuser" )
+    public List<LogEntry> getLogEntriesUser () {
+        final User self = User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() );
+        if ( self == null ) {
+            return null;
+        }
+        final List<LogEntry> list = LogEntry.getAllForUser( self.getUsername() );
+        list.sort( new Comparator<Object>() {
+            @Override
+            public int compare ( final Object arg0, final Object arg1 ) {
+                return ( (LogEntry) arg1 ).getTime().compareTo( ( (LogEntry) arg0 ).getTime() );
+            }
+        } );
+
+        // list is sorted
+        final int size = list.size();
+        if ( size <= 10 ) {
+            return list;
+        }
+        else {
+            return list;
+        }
+    }
+
+    @GetMapping ( BASE_PATH + "/logentriesaccrole" )
+    public int getAccRole () {
+        return User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() ).getRole().getCode();
+    }
 }
