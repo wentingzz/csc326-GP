@@ -20,6 +20,7 @@ import javax.mail.Store;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -74,6 +75,14 @@ public class BBTStepDefs {
     @Given ( "I am able to log in to iTrust as (.+) with password (.+)" )
     public void login ( final String username, final String password ) {
         driver.get( baseUrl );
+        try {
+            driver.findElement( By.id( "logout" ) ).click();
+        }
+        catch ( final NoSuchElementException nsee ) {
+            // user is not logged in, we good
+        }
+
+        wait.until( ExpectedConditions.titleIs( "iTrust2 :: Login" ) );
         setTextField( By.name( "username" ), username );
         setTextField( By.name( "password" ), password );
         final WebElement submit = driver.findElement( By.className( "btn" ) );
@@ -347,7 +356,7 @@ public class BBTStepDefs {
     @When ( "I go to the Request Appointment page" )
     public void navReqAppt () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
-        assertTrue( true );
+        // assertTrue( true );
     }
 
     @When ( "I fill in values for the Appointment Request Fields" )
@@ -405,7 +414,13 @@ public class BBTStepDefs {
 
     @When ( "I go to the View Requests page" )
     public void navViewReqs () {
+        // driver.findElement( By.id( "viewrequests" ) ).click();
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewrequests').click();" );
+    }
+
+    @When ( "I go to the View Requests page as a patient" )
+    public void navViewReqsPatient () {
+        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewrequests-patients').click();" );
     }
 
     @When ( "I approve the appointment request" )
@@ -496,7 +511,7 @@ public class BBTStepDefs {
         submit.click();
     }
 
-    @Then ( "My credentials are not correct for the second time" )
+    @Then ( "My credentials are incorrect for the second time" )
     public void credentialsWrongSecondTime () {
         wait.until( ExpectedConditions.visibilityOfElementLocated( By.className( "alert-error" ) ) );
         assertTrue( driver.findElement( By.className( "alert-error" ) ).getText()
@@ -646,9 +661,10 @@ public class BBTStepDefs {
 
     }
 
-    @And ( "I am returned to the homepage" )
+    @Then ( "I am returned to the homepage" )
     public void etPhoneHome () {
         // this is on the homepage
+        driver.get( baseUrl );
         assertTrue( driver.getPageSource().contains( "Welcome to iTrust2" ) );
 
     }
@@ -709,6 +725,5 @@ public class BBTStepDefs {
     public void signOut () {
         final WebElement logout = driver.findElement( By.id( "logout" ) );
         logout.click();
-
     }
 }

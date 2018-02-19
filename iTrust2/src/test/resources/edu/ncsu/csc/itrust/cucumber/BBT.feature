@@ -15,7 +15,7 @@ And a password email is sent to the patient with address <email>
 Examples:
 	|username   |password|newPassword|email	|
 	|csc326     |redball	|yellowball	|csc326s18.203.2@gmail.com	|
-	|pwtestuser2|123456  | 123456| csc326s18.203.2@gmail.com    |
+	|pwtestuser2|123456  | 654321    | csc326s18.203.2@gmail.com    |
 
 Scenario Outline: Appointment declined
 Given I am able to log in to iTrust as <username> with password <password>
@@ -31,7 +31,7 @@ Then The appointment is within the list of upcoming events
 And a declined email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
-	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
+	|csc326     |redball	|csc326s18.203.2@gmail.com	|
 #	|pwtestuser2|123456  | csc326s18.203.2@gmail.com    |
 	
 Scenario Outline: Appointment approved
@@ -48,7 +48,7 @@ Then The appointment is within the list of upcoming events
 And an approved email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
-	|csc326     |yellowball	|csc326s18.203.2@gmail.com	|
+	|csc326     |redball	|csc326s18.203.2@gmail.com	|
 #    |pwtestuser2|123456  |csc326s18.203.2@gmail.com    |
     
 Scenario Outline: Email sent to User locked out after 3 failed attempts
@@ -56,7 +56,7 @@ Given The user <username> with password <correct> and the current machine has no
 When I try to login to iTrust as <username> with password <password1>
 Then My credentials are not correct
 When I try a second time to login as <username> with password <password2>
-Then My credentials are not correct for the second time
+Then My credentials are incorrect for the second time
 When I try a third time to login as <username> with password <password3>
 Then The account is locked for one hour
 And a lockout email is sent to the user with address <email>
@@ -99,7 +99,7 @@ When I enter a valid starting date <startdate> and a valid end date <enddate>
 Then I see access logs with 4 entries
 Examples:
 	|username	|password	|startdate	|enddate	 |
-	|csc326		|notredball	|02/05/18	|02/06/18|
+	|csc326		|redball	|02/05/18	|02/06/18|
 	|pwtestuser2|123456  | 02/06/18        |02/27/18   |
 	
 Scenario Outline: View logs with invalid date
@@ -110,7 +110,7 @@ Then I do not see any log entries
 And I see an option to re-select the range of dates
 Examples:
 	|username	|password	|startdate		|enddate	 |
-	|csc326		|notredball	|abcdefghijklmno	|02/06/18|
+	|csc326		|redball	|abcdefghijklmno	|02/06/18|
     |pwtestuser2|123456  |123456         |asdfjsjfjfjdk   |
 
 Scenario Outline: View logs with invalid range
@@ -120,7 +120,7 @@ Then I do not see any log entries
 And I see an option to re-select the range of dates
 Examples:
 	|username	|password	|startdate	|enddate	 |
-	|csc326		|notredball	|02/06/18	|02/05/18|
+	|csc326		|redball	|02/06/18	|02/05/18|
 	|pwtestuser2|123456  |123456         |csc326s18.203.2@gmail.com    |
 	
 Scenario Outline: View more than 10 logs
@@ -143,7 +143,7 @@ And I edit my preferred name field
 Then I return to the homepage and view the access log entries
 #Examples:
 #	|username	|password	|
-#	|csc326		|notredball1	|
+#	|csc326		|redball	|
 	
 Scenario Outline: User cannot see admin code in access log
 Given The user does not already exist in the database
