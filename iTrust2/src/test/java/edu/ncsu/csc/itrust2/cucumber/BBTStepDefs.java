@@ -414,7 +414,6 @@ public class BBTStepDefs {
 
     @When ( "I go to the View Requests page" )
     public void navViewReqs () {
-        // driver.findElement( By.id( "viewrequests" ) ).click();
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewrequests').click();" );
     }
 
@@ -423,7 +422,7 @@ public class BBTStepDefs {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewrequests-patients').click();" );
     }
 
-    @When ( "I approve the appointment request" )
+    @And ( "I approve the appointment request" )
     public void approveApptReq () {
         driver.findElement( By.name( "appointment" ) ).click();
         driver.findElement( By.className( "btn" ) ).click();
@@ -452,7 +451,7 @@ public class BBTStepDefs {
 
     }
 
-    @Given ( "The user (.+) with password (.+) and the current machine has no failed login attempts\n" )
+    @Given ( "The user (.+) with password (.+) and the current machine does not have failed login attempts\n" )
     public void noLoginAttempts ( final String username, final String correct ) {
         // attempts cleared by logging in
         driver.get( baseUrl );
@@ -511,7 +510,7 @@ public class BBTStepDefs {
         submit.click();
     }
 
-    @Then ( "My credentials are incorrect for the second time" )
+    @Then ( "My credentials are again not correct" )
     public void credentialsWrongSecondTime () {
         wait.until( ExpectedConditions.visibilityOfElementLocated( By.className( "alert-error" ) ) );
         assertTrue( driver.findElement( By.className( "alert-error" ) ).getText()
@@ -661,10 +660,10 @@ public class BBTStepDefs {
 
     }
 
-    @Then ( "I am returned to the homepage" )
+    @Then ( "I return to the homepage" )
     public void etPhoneHome () {
-        // this is on the homepage
-        driver.get( baseUrl );
+        // click iTrust2 in the upper righthand corner
+        driver.findElement( By.xpath( "//a[contains(@href, 'iTrust2')]" ) ).click();
         assertTrue( driver.getPageSource().contains( "Welcome to iTrust2" ) );
 
     }
@@ -684,10 +683,10 @@ public class BBTStepDefs {
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
     public void enterDates ( final String startDate, final String endDate ) {
-        final WebElement from = driver.findElement( By.xpath( "//span[@ng-model='from']" ) );
+        final WebElement from = driver.findElement( By.xpath( "//input[@ng-model='from']" ) );
         from.clear();
         from.sendKeys( startDate );
-        final WebElement to = driver.findElement( By.xpath( "//span[@ng-model='to']" ) );
+        final WebElement to = driver.findElement( By.xpath( "//input[@ng-model='to']" ) );
         to.clear();
         to.sendKeys( endDate );
         final WebElement submit = driver.findElement( By.className( "btn" ) );
@@ -696,10 +695,10 @@ public class BBTStepDefs {
 
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
-        final WebElement from = driver.findElement( By.xpath( "//span[@ng-model='from']" ) );
+        final WebElement from = driver.findElement( By.xpath( "//input[@ng-model='from']" ) );
         from.clear();
         from.sendKeys( startDate );
-        final WebElement to = driver.findElement( By.xpath( "//span[@ng-model='to']" ) );
+        final WebElement to = driver.findElement( By.xpath( "//input[@ng-model='to']" ) );
         to.clear();
         to.sendKeys( endDate );
         final WebElement submit = driver.findElement( By.className( "btn" ) );
