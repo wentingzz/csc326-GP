@@ -65,6 +65,21 @@
 				$scope.loadMore = function () {
 					$scope.totalDisplayed += 10;  
 				};
+				
+				$scope.loadFew = function() {
+					$scope.totalDisplayed -= 10;
+				};
+				
+				// Gets the role of the current user
+				$http.get("/iTrust2/api/v1/role").then(
+						function(response) {
+							$scope.currRole = response.data.message;
+							$scope.message = "";
+						}, function(rejection) {
+							$scope.currRole = null;
+							$scope.message = "Unable to get user's role";
+						});
+				
 			});
 		</script>
 		
@@ -75,8 +90,10 @@
 				<h4 style="color:red" ng-model="message"></h4>
 				
 				<h2>Logs</h2>
-				<!-- Loads 20 more logs -->
+				<!-- Loads 10 more logs -->
 				<button class="btn" ng-click="loadMore()">Load more logs</button>
+				<!-- Removes 10 logs -->
+				<button class="btn" ng-click="loadFew()">Load fewer logs</button>
 				<!-- Enter date range -->
 				<br>
 				<label>Start Date</label>
@@ -91,7 +108,7 @@
 						<tr>
 							<th>Time Stamp</th>
 							<th>Accessor Name</th>
-							<th>Accessor Role</th>
+							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
 							<th>Description</th>
 							<th>Transaction Type</th>
 						</tr>
@@ -100,7 +117,7 @@
 						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
 							<td name="timestamp">{{a.Dates | date: "dd/MM/yyyy hh:mm:ss"}}</td>
 							<td name="accname">{{a.primaryUser}}</td>
-							<td name="accrole">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
+							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 							<td name="description">{{a.message}}</td>
 							<td name="transaction">{{a.logCode}}</td>
 						</tr>
