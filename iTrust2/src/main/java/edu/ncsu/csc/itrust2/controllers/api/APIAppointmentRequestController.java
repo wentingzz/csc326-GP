@@ -112,7 +112,7 @@ public class APIAppointmentRequestController extends APIController {
                 }
 
                 if ( addr == null || addr == "" ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
                             "An email should have been sent to you, but there is no email associated with your account." );
                 }
                 else {
@@ -178,7 +178,7 @@ public class APIAppointmentRequestController extends APIController {
                 }
 
                 if ( addr == null || addr == "" ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
                             "An email should have been sent to you, but there is no email associated with your account." );
                 }
                 else {
@@ -257,7 +257,7 @@ public class APIAppointmentRequestController extends APIController {
                 }
 
                 if ( addr == null || addr == "" ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
                             "An email should have been sent to you, but there is no email associated with your account." );
                 }
                 else {
@@ -317,7 +317,7 @@ public class APIAppointmentRequestController extends APIController {
                 }
 
                 if ( addr == null || addr == "" ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT,
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
                             "An email should have been sent to you, but there is no email associated with your account." );
                 }
                 else {

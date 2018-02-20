@@ -23,7 +23,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -36,7 +37,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import edu.ncsu.csc.itrust2.models.persistent.PasswordResetToken;
 import edu.ncsu.csc.itrust2.models.persistent.User;
-import edu.ncsu.csc.itrust2.utils.HibernateDataGenerator;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 /**
  * Step definitions for the BBT feature file.
@@ -54,10 +55,16 @@ public class BBTStepDefs {
 
     @Before
     public void setup () {
-        driver = new HtmlUnitDriver( true );
-        wait = new WebDriverWait( driver, 5 );
+        // driver = new HtmlUnitDriver( true );
 
-        HibernateDataGenerator.generateUsers();
+        ChromeDriverManager.getInstance().setup();
+        final ChromeOptions options = new ChromeOptions();
+        // options.addArguments( "headless" );
+        options.addArguments( "window-size=1200x600" );
+        options.addArguments( "blink-settings=imagesEnabled=false" );
+        driver = new ChromeDriver( options );
+        wait = new WebDriverWait( driver, 10 );
+
     }
 
     @After
@@ -89,6 +96,26 @@ public class BBTStepDefs {
         submit.click();
 
         wait.until( ExpectedConditions.not( ExpectedConditions.titleIs( "iTrust2 :: Login" ) ) );
+    }
+
+    @When ( "I login as hcp" )
+    public void loginHcp () {
+        driver.get( baseUrl );
+        try {
+            driver.findElement( By.id( "logout" ) ).click();
+        }
+        catch ( final NoSuchElementException nsee ) {
+            // user is not logged in, we good
+        }
+        wait.until( ExpectedConditions.titleIs( "iTrust2 :: Login" ) );
+        final WebElement username = driver.findElement( By.name( "username" ) );
+        username.clear();
+        username.sendKeys( "hcp" );
+        final WebElement password = driver.findElement( By.name( "password" ) );
+        password.clear();
+        password.sendKeys( "123456" );
+        final WebElement submit = driver.findElement( By.className( "btn" ) );
+        submit.click();
     }
 
     @When ( "I go to the change password page" )
@@ -396,20 +423,6 @@ public class BBTStepDefs {
         future.setTimeInMillis( value );
         final String dateString = sdf.format( future.getTime() );
         assertTrue( driver.getPageSource().contains( dateString ) );
-
-    }
-
-    @When ( "I login as hcp" )
-    public void loginHCP () {
-        driver.get( baseUrl );
-        final WebElement username = driver.findElement( By.name( "username" ) );
-        username.clear();
-        username.sendKeys( "hcp" );
-        final WebElement password = driver.findElement( By.name( "password" ) );
-        password.clear();
-        password.sendKeys( "123456" );
-        final WebElement submit = driver.findElement( By.className( "btn" ) );
-        submit.click();
     }
 
     @When ( "I go to the View Requests page" )

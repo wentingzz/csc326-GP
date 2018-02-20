@@ -19,11 +19,11 @@ Examples:
 
 Scenario Outline: Appointment declined
 Given I am able to log in to iTrust as <username> with password <password>
-When I go to the Request Appointment page
+When I go to the Request Appointment page as a patient
 When I fill in values for the Appointment Request Fields
 Then The appointment was requested successfully
 And The appointment can be found within the list
-When I log in as hcp
+When I login as hcp
 When I go to the View Requests page
 And I approve the appointment request
 Then The request was successfully updated
@@ -36,11 +36,11 @@ Examples:
 	
 Scenario Outline: Appointment approved
 Given I am able to log in to iTrust as <username> with password <password>
-When I go to the Request Appointment page
+When I go to the Request Appointment page as a patient
 When I fill in values for the Appointment Request Fields
 Then The appointment was requested successfully
 And The appointment can be found within the list
-When I log in as hcp
+When I login as hcp
 And I go to the View Requests page
 And I approve the appointment request
 Then The request was successfully updated

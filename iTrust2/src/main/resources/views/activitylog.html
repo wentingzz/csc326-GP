@@ -106,20 +106,22 @@
 				<table style="width:100%" class="table table-hover">
 					<thead>
 						<tr>
-							<th>Time Stamp</th>
-							<th>Accessor Name</th>
-							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
-							<th>Description</th>
 							<th>Transaction Type</th>
+							<th>Primary User</th>
+							<th>Secondary User</th>
+							<th>Time Stamp</th>
+							<th>Description</th>
+							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
-							<td name="timestamp">{{a.Dates | date: "dd/MM/yyyy hh:mm:ss"}}</td>
-							<td name="accname">{{a.primaryUser}}</td>
-							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
-							<td name="description">{{a.message}}</td>
 							<td name="transaction">{{a.logCode}}</td>
+							<td name="primUser">{{a.primaryUser}}</td>
+							<td name="secUser">{{a.secondaryUser}}</td>
+							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
+							<td name="description">{{a.message}}</td>
+							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 						</tr>
 					</tbody>			
 				</table>
