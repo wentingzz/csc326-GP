@@ -266,67 +266,7 @@ public class BBTStepDefs {
         }
     }
 
-    // @Then ( "a lockout email is sent to the user" )
-    // public void verifyEmailLockout () {
-    // final String username = "csc326s18.203.2@gmail.com";
-    // final String password = "greenball";
-    // final String host = "pop.gmail.com";
-    // final PasswordResetToken token = null;
-    // boolean containsSubject = false;
-    // int index = 0;
-    // try {
-    // // create properties field
-    // final Properties properties = new Properties();
-    // properties.put( "mail.store.protocol", "pop3" );
-    // properties.put( "mail.pop3.host", host );
-    // properties.put( "mail.pop3.port", "995" );
-    // properties.put( "mail.pop3.starttls.enable", "true" );
-    // final Session emailSession = Session.getDefaultInstance( properties
-    // );
-    // // emailSession.setDebug(true);
-    //
-    // // create the POP3 store object and connect with the pop server
-    // final Store store = emailSession.getStore( "pop3s" );
-    //
-    // store.connect( host, username, password );
-    //
-    // // create the folder object and open it
-    // final Folder emailFolder = store.getFolder( "INBOX" );
-    // emailFolder.open( Folder.READ_WRITE );
-    //
-    // // retrieve the messages from the folder in an array and print it
-    // final Message[] messages = emailFolder.getMessages();
-    // Arrays.sort( messages, ( x, y ) -> {
-    // try {
-    // return y.getSentDate().compareTo( x.getSentDate() );
-    // }
-    // catch ( final MessagingException e ) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // return 0;
-    // } );
-    // Message message;
-    // // go through emails, looking for the subject line we want;
-    // // if it exists, then containsSubject is true
-    // while ( containsSubject == false ) {
-    // message = messages[index];
-    // if ( message.getSubject() != null && message.getSubject().contains(
-    // "iTrust2 Appointment Request" ) ) {
-    // containsSubject = true;
-    // }
-    // index++;
-    // }
-    // }
-    // catch ( final Exception e ) {
-    // e.printStackTrace();
-    // }
-    // if ( containsSubject == false ) {
-    // fail( "Failed to receive email." );
-    // }
-    // }
-
-    @Then ( "a declined email is sent to the user with address <email>" )
+    @And ( "a declined email is sent to the user with address <email>" )
     public void verifyEmailDeclined ( final String emailAddress ) {
         final String username = emailAddress;
         final String password = "greenball";
@@ -448,7 +388,7 @@ public class BBTStepDefs {
 
     }
 
-    @Then ( "The appointment is within the list of upcoming events" )
+    @And ( "The appointment is within the list of upcoming events" )
     public void apptInList () {
         driver.findElement( By.linkText( "iTrust2" ) ).click();
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('upcomingrequests').click();" );
@@ -464,7 +404,7 @@ public class BBTStepDefs {
 
     }
 
-    @Given ( "The user (.+) with password (.+) and the current machine does not have failed login attempts\n" )
+    @Given ( "The user (.+) with password (.+) and the current machine does not have failed login attempts" )
     public void noLoginAttempts ( final String username, final String correct ) {
         // attempts cleared by logging in
         driver.get( baseUrl );

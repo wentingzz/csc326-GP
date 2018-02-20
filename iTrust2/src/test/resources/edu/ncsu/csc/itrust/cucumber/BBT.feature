@@ -27,7 +27,7 @@ When I login as hcp
 When I go to the View Requests page
 And I approve the appointment request
 Then The request was successfully updated
-Then The appointment is within the list of upcoming events
+And The appointment is within the list of upcoming events
 And a declined email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
