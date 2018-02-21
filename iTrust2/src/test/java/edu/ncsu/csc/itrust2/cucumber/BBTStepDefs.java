@@ -158,6 +158,12 @@ public class BBTStepDefs {
         // driver.findElement( By.id( "logout" ) ).click();
     }
 
+    @Then ( "there is a log stating no email on file" )
+    public void checkforEmailLog () {
+        // unsure how to check this since it's generated with JS
+        driver.getPageSource().contains( "activitylog" );
+    }
+
     @Then ( "a password email is sent to the patient with address (.+)" )
     public void verifyEmailPassword ( final String emailAddress ) {
         final String username = emailAddress;
@@ -587,8 +593,7 @@ public class BBTStepDefs {
 
     @When ( "I go to the Add User page" )
     public void navAddUser () {
-        // ( (JavascriptExecutor) driver ).executeScript(
-        // "document.getElementById('addnewuser').click();" );
+        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
@@ -600,6 +605,10 @@ public class BBTStepDefs {
         final WebElement pw = driver.findElement( By.id( "password" ) );
         pw.clear();
         pw.sendKeys( password );
+
+        final WebElement password2 = driver.findElement( By.id( "password2" ) );
+        password2.clear();
+        password2.sendKeys( password );
 
         final Select role = new Select( driver.findElement( By.id( "role" ) ) );
         role.selectByVisibleText( "ROLE_HCP" );

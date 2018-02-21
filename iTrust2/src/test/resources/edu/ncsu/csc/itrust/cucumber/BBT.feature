@@ -68,7 +68,7 @@ Given The user <username> does not already exist in my database
 When I login as admin
 When I go to the Add User page
 When I fill in values in the Add User form with <username> and <password> 
-Then The user is created successfully
+Then The user was created successfully
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
 When I fill out the page's form with current password <password> and new password <newPassword>
@@ -150,7 +150,7 @@ Given The user does not already exist in the database
 When I log in as admin
 When I go to the Add User page
 When I fill in the values in the Add User form with <username> and <password> 
-Then The user is created successfully
+Then The user was created successfully
 And I sign out as admin
 Given I am able to log in to iTrust as <username> with password <password>
 Then I do not see the admin code in my access log
