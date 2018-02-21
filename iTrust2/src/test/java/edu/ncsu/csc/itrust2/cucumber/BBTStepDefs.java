@@ -31,7 +31,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -59,7 +58,7 @@ public class BBTStepDefs {
 
         ChromeDriverManager.getInstance().setup();
         final ChromeOptions options = new ChromeOptions();
-        // options.addArguments( "headless" );
+        options.addArguments( "headless" );
         options.addArguments( "window-size=1200x600" );
         options.addArguments( "blink-settings=imagesEnabled=false" );
         driver = new ChromeDriver( options );
@@ -78,7 +77,6 @@ public class BBTStepDefs {
         elem.sendKeys( value.toString() );
     }
 
-    // need to login as admin and create user?
     @Given ( "I am able to log in to iTrust as (.+) with password (.+)" )
     public void login ( final String username, final String password ) {
         driver.get( baseUrl );
@@ -148,10 +146,10 @@ public class BBTStepDefs {
             fail( driver.findElement( By.name( "message" ) ).getText() + "\n" + token.getId() + "\n"
                     + token.getTempPasswordPlaintext() );
         }
-        driver.findElement( By.id( "logout" ) ).click();
+        // driver.findElement( By.id( "logout" ) ).click();
     }
 
-    @And ( "a password email is sent to the patient with address (.+)" )
+    @Then ( "a password email is sent to the patient with address (.+)" )
     public void verifyEmailPassword ( final String emailAddress ) {
         final String username = emailAddress;
         final String password = "greenball";
@@ -212,7 +210,7 @@ public class BBTStepDefs {
      * htm
      */
     // TODO verify this works
-    @And ( "an approved email is sent to the user with address <email>" )
+    @Then ( "an approved email is sent to the user with address (.+)" )
     public void verifyEmailApproved ( final String emailAddress ) {
         final String username = emailAddress;
         final String password = "greenball";
@@ -266,7 +264,7 @@ public class BBTStepDefs {
         }
     }
 
-    @And ( "a declined email is sent to the user with address <email>" )
+    @Then ( "a declined email is sent to the user with address (.+)" )
     public void verifyEmailDeclined ( final String emailAddress ) {
         final String username = emailAddress;
         final String password = "greenball";
@@ -328,6 +326,7 @@ public class BBTStepDefs {
 
     @When ( "I fill in values for the Appointment Request Fields" )
     public void fillValsApptReq () {
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "date" ) ) );
         final WebElement date = driver.findElement( By.id( "date" ) );
         date.clear();
         final SimpleDateFormat sdf = new SimpleDateFormat( "MM/dd/yyyy", Locale.ENGLISH );
@@ -375,7 +374,7 @@ public class BBTStepDefs {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewrequests-patients').click();" );
     }
 
-    @And ( "I approve the appointment request" )
+    @When ( "I approve the appointment request" )
     public void approveApptReq () {
         driver.findElement( By.name( "appointment" ) ).click();
         driver.findElement( By.className( "btn" ) ).click();
@@ -388,7 +387,7 @@ public class BBTStepDefs {
 
     }
 
-    @And ( "The appointment is within the list of upcoming events" )
+    @Then ( "The appointment is within the list of upcoming events" )
     public void apptInList () {
         driver.findElement( By.linkText( "iTrust2" ) ).click();
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('upcomingrequests').click();" );
@@ -440,14 +439,14 @@ public class BBTStepDefs {
         submit.click();
     }
 
-    @Then ( "My credentials are not correct" )
+    @When ( "My credentials are not correct" )
     public void credentialsWrong () {
         wait.until( ExpectedConditions.visibilityOfElementLocated( By.className( "alert-error" ) ) );
         assertTrue( driver.findElement( By.className( "alert-error" ) ).getText()
                 .contains( "Invalid username and password." ) );
     }
 
-    @When ( "I try a second time to login to iTrust as (.+) with password (.+)" )
+    @When ( "I try a second time to login as (.+) with password (.+)" )
     public void tryToLoginSecondTime ( final String username, final String password2 ) {
         driver.get( baseUrl );
 
@@ -463,14 +462,14 @@ public class BBTStepDefs {
         submit.click();
     }
 
-    @Then ( "My credentials are again not correct" )
+    @When ( "My credentials are again not correct" )
     public void credentialsWrongSecondTime () {
         wait.until( ExpectedConditions.visibilityOfElementLocated( By.className( "alert-error" ) ) );
         assertTrue( driver.findElement( By.className( "alert-error" ) ).getText()
                 .contains( "Invalid username and password." ) );
     }
 
-    @When ( "I try a third time to login to iTrust as (.+) with password (.+)" )
+    @When ( "I try a third time to login as (.+) with password (.+)" )
     public void tryToLoginThirdTime ( final String username, final String password3 ) {
         driver.get( baseUrl );
 
@@ -493,7 +492,7 @@ public class BBTStepDefs {
                 .contains( "Too many invalid logins. Account locked for 1 hour." ) );
     }
 
-    @Then ( "a lockout email is sent to the user with address <email>" )
+    @Then ( "a lockout email is sent to the user with address (.+)" )
     public void lockoutEmailSent ( final String emailAddress ) {
         final String username = emailAddress;
         final String password = "greenball";
@@ -548,7 +547,7 @@ public class BBTStepDefs {
 
     }
 
-    @Given ( "The user does not already exist in my database" )
+    @Given ( "The user (.+) does not already exist in my database" )
     public void userNotInDatabase ( final String username ) {
         final List<User> users = User.getUsers();
         for ( final User user : users ) {
@@ -636,26 +635,32 @@ public class BBTStepDefs {
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
     public void enterDates ( final String startDate, final String endDate ) {
-        final WebElement from = driver.findElement( By.xpath( "//input[@ng-model='from']" ) );
-        from.clear();
-        from.sendKeys( startDate );
-        final WebElement to = driver.findElement( By.xpath( "//input[@ng-model='to']" ) );
-        to.clear();
-        to.sendKeys( endDate );
-        final WebElement submit = driver.findElement( By.className( "btn" ) );
-        submit.click();
+        // final WebElement from = driver.findElement( By.xpath(
+        // "//input[@ng-model='from']" ) );
+        // from.clear();
+        // from.sendKeys( startDate );
+        // final WebElement to = driver.findElement( By.xpath(
+        // "//input[@ng-model='to']" ) );
+        // to.clear();
+        // to.sendKeys( endDate );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
     }
 
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
-        final WebElement from = driver.findElement( By.xpath( "//input[@ng-model='from']" ) );
-        from.clear();
-        from.sendKeys( startDate );
-        final WebElement to = driver.findElement( By.xpath( "//input[@ng-model='to']" ) );
-        to.clear();
-        to.sendKeys( endDate );
-        final WebElement submit = driver.findElement( By.className( "btn" ) );
-        submit.click();
+        // final WebElement from = driver.findElement( By.xpath(
+        // "//input[@ng-model='from']" ) );
+        // from.clear();
+        // from.sendKeys( startDate );
+        // final WebElement to = driver.findElement( By.xpath(
+        // "//input[@ng-model='to']" ) );
+        // to.clear();
+        // to.sendKeys( endDate );
+        // final WebElement submit = driver.findElement( By.className( "btn" )
+        // );
+        // submit.click();
 
     }
 

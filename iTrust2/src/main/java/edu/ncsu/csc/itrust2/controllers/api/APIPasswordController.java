@@ -75,7 +75,7 @@ public class APIPasswordController extends APIController {
                         }
                     }
 
-                    if ( addr == null || addr == "" ) {
+                    if ( addr == null || "".equals( addr ) ) {
                         LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, user.getUsername(),
                                 "An email should have been sent to you, but there is no email associated with your account." );
                     }
@@ -149,7 +149,7 @@ public class APIPasswordController extends APIController {
                 }
             }
 
-            if ( addr == null || addr == "" ) {
+            if ( addr == null || "".equals( addr ) ) {
                 LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, user.getUsername(),
                         "An email should have been sent to you, but there is no email associated with your account." );
             }
@@ -210,7 +210,7 @@ public class APIPasswordController extends APIController {
                     }
                 }
 
-                if ( addr == null || addr == "" ) {
+                if ( addr == null || "".equals( addr ) ) {
                     LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, user.getUsername(),
                             "An email should have been sent to you, but there is no email associated with your account." );
                 }
