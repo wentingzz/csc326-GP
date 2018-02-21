@@ -83,17 +83,16 @@ public class APIPasswordController extends APIController {
                         String body = "Hello " + firstName
                                 + ", \n\nYour password has been changed. If you did not make this change, please contact us.\n";
                         body += "\n\n--iTrust2 Staff";
+                        user.setPassword( pe.encode( form.getNewPassword() ) );
+                        user.save();
                         EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+                        LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
+                                "Successfully changed password for user " + user.getUsername() );
                     }
                 }
                 catch ( final NullPointerException npe ) {
                     // npe
                 }
-
-                user.setPassword( pe.encode( form.getNewPassword() ) );
-                user.save();
-                LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
-                        "Successfully changed password for user " + user.getUsername() );
                 return new ResponseEntity( successResponse( "Password changed successfully" ), HttpStatus.OK );
             }
 
