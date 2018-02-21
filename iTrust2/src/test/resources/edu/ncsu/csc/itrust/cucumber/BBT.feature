@@ -72,8 +72,8 @@ Then The user is created successfully
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
 When I fill out the page's form with current password <password> and new password <newPassword>
-Then My password is updated unsuccessfully
-And I return to the homepage
+Then My password is updated successfully
+And there is a log stating no email on file
 Examples:
 	|username  |password|newPassword|
 	|rando     |redball	|notredball	|

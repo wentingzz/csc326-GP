@@ -17,6 +17,7 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -69,6 +70,11 @@ public class BBTStepDefs {
     @After
     public void tearDown () {
         driver.close();
+    }
+
+    @AfterClass
+    public void killChrome () {
+        driver.quit();
     }
 
     private void setTextField ( final By byval, final Object value ) {
@@ -132,6 +138,9 @@ public class BBTStepDefs {
 
         final WebElement submit = driver.findElement( By.name( "submitButton" ) );
         submit.click();
+
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.name( "message" ) ) );
+
     }
 
     @Then ( "My password is updated successfully" )
@@ -576,9 +585,10 @@ public class BBTStepDefs {
 
     }
 
-    @When ( "I go to the add user page" )
+    @When ( "I go to the Add User page" )
     public void navAddUser () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        // ( (JavascriptExecutor) driver ).executeScript(
+        // "document.getElementById('addnewuser').click();" );
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
@@ -635,6 +645,7 @@ public class BBTStepDefs {
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
     public void enterDates ( final String startDate, final String endDate ) {
+        // TODO
         // final WebElement from = driver.findElement( By.xpath(
         // "//input[@ng-model='from']" ) );
         // from.clear();
@@ -650,6 +661,7 @@ public class BBTStepDefs {
 
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
+        // TODO
         // final WebElement from = driver.findElement( By.xpath(
         // "//input[@ng-model='from']" ) );
         // from.clear();
@@ -682,5 +694,7 @@ public class BBTStepDefs {
     public void signOut () {
         final WebElement logout = driver.findElement( By.id( "logout" ) );
         logout.click();
+        // new NgWebDriver( (ChromeDriver) driver
+        // ).waitForAngularRequestsToFinish();
     }
 }
