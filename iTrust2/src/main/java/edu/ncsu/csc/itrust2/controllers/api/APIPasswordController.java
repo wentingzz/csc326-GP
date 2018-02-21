@@ -92,6 +92,7 @@ public class APIPasswordController extends APIController {
                 }
                 catch ( final NullPointerException npe ) {
                     // npe
+
                 }
                 return new ResponseEntity( successResponse( "Password changed successfully" ), HttpStatus.OK );
             }
