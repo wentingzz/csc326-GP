@@ -73,15 +73,7 @@ public class APILogEntryController extends APIController {
                 return ( (LogEntry) arg1 ).getTime().compareTo( ( (LogEntry) arg0 ).getTime() );
             }
         } );
-
-        // list is sorted
-        final int size = list.size();
-        if ( size <= 10 ) {
-            return list;
-        }
-        else {
-            return list;
-        }
+        return list;
     }
 
     @GetMapping ( BASE_PATH + "/logentriesaccrole" )
