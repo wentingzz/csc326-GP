@@ -135,7 +135,6 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                                 e.printStackTrace();
                             }
                             catch ( final NullPointerException npe ) {
-                                System.out.println( npe.getMessage() );
                                 npe.printStackTrace();
                             }
                         }
