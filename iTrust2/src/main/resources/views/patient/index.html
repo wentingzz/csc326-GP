@@ -59,11 +59,12 @@
 				<table style="width:100%" class="table table-hover">
 					<thead>
 						<tr>
-							<th>Timestamp</th>
-							<th>Accessor Name</th>
-							<th>Accessor Role</th>
-							<th>Description</th>
 							<th>Transaction Type</th>
+							<th>Primary User</th>
+							<th>Secondary User</th>
+							<th>Time Stamp</th>
+							<th>Description</th>
+							<th>Accessor Role</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -73,7 +74,7 @@
 							<td name="secUser">{{a.secondaryUser}}</td>
 							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
 							<td name="description">{{a.message}}</td>
-							<!-- <td name="accrole">{{a.accrole}}</td> -->
+							<td name="accrole">{{a.accrole}}</td>
 						</tr>
 					</tbody>			
 				</table>

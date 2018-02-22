@@ -62,38 +62,32 @@ public class APIPasswordController extends APIController {
                 user.setPassword( pe.encode( form.getNewPassword() ) );
                 user.save();
 
-                try {
-                    String addr = "";
-                    String firstName = "";
-                    final Personnel person = Personnel.getByName( user );
-                    if ( person != null ) {
-                        addr = person.getEmail();
-                        firstName = person.getFirstName();
-                    }
-                    else {
-                        final Patient patient = Patient.getPatient( user );
-                        if ( patient != null ) {
-                            addr = patient.getEmail();
-                            firstName = patient.getFirstName();
-                        }
-                    }
-
-                    if ( addr == null || "".equals( addr ) ) {
-                        LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, user.getUsername(),
-                                "An email should have been sent to you, but there is no email associated with your account." );
-                    }
-                    else {
-                        String body = "Hello " + firstName
-                                + ", \n\nYour password has been changed. If you did not make this change, please contact us.\n";
-                        body += "\n\n--iTrust2 Staff";
-                        EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
-                        LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
-                                "Successfully changed password for user " + user.getUsername() );
+                String addr = "";
+                String firstName = "";
+                final Personnel person = Personnel.getByName( user );
+                if ( person != null ) {
+                    addr = person.getEmail();
+                    firstName = person.getFirstName();
+                }
+                else {
+                    final Patient patient = Patient.getPatient( user );
+                    if ( patient != null ) {
+                        addr = patient.getEmail();
+                        firstName = patient.getFirstName();
                     }
                 }
-                catch ( final NullPointerException npe ) {
-                    // npe
 
+                if ( addr == null || "".equals( addr ) ) {
+                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, user.getUsername(),
+                            "An email should have been sent to you, but there is no email associated with your account." );
+                }
+                else {
+                    String body = "Hello " + firstName
+                            + ", \n\nYour password has been changed. If you did not make this change, please contact us.\n";
+                    body += "\n\n--iTrust2 Staff";
+                    EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
+                    LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
+                            "Successfully changed password for user " + user.getUsername() );
                 }
                 return new ResponseEntity( successResponse( "Password changed successfully" ), HttpStatus.OK );
             }
