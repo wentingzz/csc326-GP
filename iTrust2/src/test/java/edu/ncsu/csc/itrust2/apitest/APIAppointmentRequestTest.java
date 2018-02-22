@@ -70,6 +70,8 @@ public class APIAppointmentRequestTest {
     @Test
     public void testDeleteNonExistentAppointment () throws Exception {
         mvc.perform( delete( "/api/v1/appointmentrequests/-1" ) ).andExpect( status().isNotFound() );
+
+        mvc.perform( delete( "/api/v1/appointmentrequests/e" ) ).andExpect( status().is4xxClientError() );
     }
 
     /**
@@ -151,6 +153,7 @@ public class APIAppointmentRequestTest {
          * when calling the API above. This will get it
          */
         final Long id = AppointmentRequest.getAppointmentRequestsForPatient( patient.getUsername() ).get( 0 ).getId();
+        System.out.println( "the id of the request is " + id.toString() );
 
         mvc.perform( get( "/api/v1/appointmentrequests/" + id ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
@@ -161,12 +164,34 @@ public class APIAppointmentRequestTest {
                 .content( TestUtils.asJsonString( appointmentForm ) ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
 
+        mvc.perform( delete( "/api/v1/appointmentrequests/" + id ) ).andExpect( status().isOk() );
+
         // Updating a nonexistent ID should not work
         mvc.perform( put( "/api/v1/appointmentrequests/-1" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( appointmentForm ) ) ).andExpect( status().isNotFound() );
 
-        mvc.perform( delete( "/api/v1/appointmentrequests/" + id ) ).andExpect( status().isOk() );
-
+        // add additional appointment
+        final AppointmentRequestForm appointmentFormTwo = new AppointmentRequestForm();
+        appointmentForm.setDate( "12/19/2030" );
+        appointmentForm.setTime( "4:50 AM" );
+        appointmentForm.setType( AppointmentType.GENERAL_CHECKUP.toString() );
+        appointmentForm.setStatus( Status.PENDING.toString() );
+        appointmentForm.setHcp( "hcp" );
+        appointmentForm.setPatient( "patient" );
+        appointmentForm.setComments( "Test appointment please ignore" );
+        /* Create the new request */
+        mvc.perform( post( "/api/v1/appointmentrequests" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( appointmentFormTwo ) ) );
+        // get the request
+        mvc.perform( get( "/api/v1/appointmentrequests" ) ).andExpect( status().isOk() );
+        final Long idTwo = AppointmentRequest.getAppointmentRequestsForPatient( patient.getUsername() ).get( 0 )
+                .getId();
+        // mvc.perform( put( "/api/v1/appointmentrequests/" + idTwo
+        // ).contentType( MediaType.APPLICATION_JSON )
+        // .content( TestUtils.asJsonString( appointmentFormTwo ) ) ).andExpect(
+        // status().isOk() )
+        // .andExpect( content().contentType(
+        // MediaType.APPLICATION_JSON_UTF8_VALUE ) );
     }
 
 }

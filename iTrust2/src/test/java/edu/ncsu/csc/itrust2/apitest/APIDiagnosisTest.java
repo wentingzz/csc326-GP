@@ -144,6 +144,12 @@ public class APIDiagnosisTest {
                 .content( TestUtils.asJsonString( form ) ) ).andReturn().getResponse().getContentAsString();
         OfficeVisit visit = null;
 
+        mvc.perform( get( "/api/v1/diagnosis/1" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( form ) ) ).andReturn().getResponse().getContentAsString();
+
+        mvc.perform( get( "/api/v1/diagnoses" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( form ) ) ).andReturn().getResponse().getContentAsString();
+
         try {
             visit = gson.fromJson( content, OfficeVisit.class );
         }

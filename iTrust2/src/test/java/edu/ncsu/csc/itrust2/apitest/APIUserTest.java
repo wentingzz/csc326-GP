@@ -103,6 +103,16 @@ public class APIUserTest {
         mvc.perform( put( "/api/v1/users/sven_badname" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( sven ) ) ).andExpect( status().isNotFound() );
 
+        // test updating the user
+        final UserForm svenUpdated = new UserForm( "sven_forkbeard", "3141592", Role.ROLE_ADMIN, 1 );
+        mvc.perform( put( "/api/v1/users/sven_forkbeard" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( svenUpdated ) ) ).andExpect( status().isOk() );
+
+        // tests getting the role of a valid user
+        // mvc.perform( get( "/api/v1/role" ).contentType(
+        // MediaType.APPLICATION_JSON )
+        // .content( TestUtils.asJsonString( svenUpdated ) ) ).andExpect(
+        // status().isOk() );
     }
 
 }

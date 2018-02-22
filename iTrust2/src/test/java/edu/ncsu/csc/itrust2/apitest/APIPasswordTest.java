@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import edu.ncsu.csc.itrust2.config.RootConfiguration;
 import edu.ncsu.csc.itrust2.forms.admin.UserForm;
+import edu.ncsu.csc.itrust2.forms.hcp_patient.PatientForm;
 import edu.ncsu.csc.itrust2.forms.personnel.PasswordChangeForm;
 import edu.ncsu.csc.itrust2.forms.personnel.PersonnelForm;
 import edu.ncsu.csc.itrust2.models.enums.Role;
@@ -55,7 +56,7 @@ public class APIPasswordTest {
         form.setNewPassword( newP );
         form.setNewPassword2( newP );
         mvc.perform( post( "/api/v1/changePassword" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( form ) ) );
+                .content( TestUtils.asJsonString( form ) ) ).andExpect( status().isOk() );
     }
 
     // Save auto-formatter wont let this be a javadoc comment
@@ -122,6 +123,108 @@ public class APIPasswordTest {
 
         mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
                 .content( "patientPW" ) ).andExpect( status().isBadRequest() );
+
+        final UserForm patient = new UserForm( "patientPW", "123456", Role.ROLE_PATIENT, 1 );
+
+        User user = new User( patient );
+        user.save();
+
+        user = User.getByName( "patientPW" ); // ensure they exist
+
+        final PersonnelForm personnel = new PersonnelForm();
+        personnel.setAddress1( "1 Test Street" );
+        personnel.setAddress2( "Address Part 2" );
+        personnel.setCity( "Prag" );
+        personnel.setEmail( "csc326s18.203.2@gmail.com" );
+        personnel.setFirstName( "Test" );
+        personnel.setLastName( "HCP" );
+        personnel.setPhone( "123-456-7890" );
+        personnel.setSelf( user.getUsername() );
+        personnel.setState( State.NC.toString() );
+        personnel.setZip( "27514" );
+        mvc.perform( post( "/api/v1/personnel" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( personnel ) ) );
+
+        assertTrue( pe.matches( "123456", user.getPassword() ) );
+        changePassword( user, "123456", "654321" );
+        user = User.getByName( "patientPW" ); // reload so changes are visible
+        assertFalse( pe.matches( "123456", user.getPassword() ) );
+        assertTrue( pe.matches( "654321", user.getPassword() ) );
+
+        final Personnel p = Personnel.getByName( user );
+        p.delete();
+        user.delete();
+
+    }
+
+    /**
+     * This tests the resetPassword method
+     *
+     * @throws Exception
+     */
+    @WithMockUser ( username = "patientPW1", roles = { "USER", "ADMIN" } )
+    @Test
+    public void testResetPassword () throws Exception {
+
+        final UserForm patient = new UserForm( "patientPW1", "123456", Role.ROLE_PATIENT, 1 );
+
+        // test the reset request for an unknown user
+        mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW1" ) ).andExpect( status().is4xxClientError() );
+        // make a user and form
+        User user = new User( patient );
+        user = User.getByName( "patientPW1" ); // ensure they exist
+        // assertNotNull( user );
+        // test the reset request for a known user, invalid token
+        mvc.perform( post( "/api/v1/resetPassword/111111" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW1" ) ).andExpect( status().is4xxClientError() );
+        // user.delete();
+    }
+
+    // Use patient form instead of personnel form
+    // Create user. Starts with password 123456.
+    // Changes to 654321.
+    // Reset to 98765.
+    // Don't delete user
+    @WithMockUser ( username = "patientPW2", roles = { "USER", "ADMIN" } )
+    @Test
+    public void testMoreValidPasswordChanges () throws Exception {
+
+        final UserForm patientUserForm = new UserForm( "patientPW2", "123456", Role.ROLE_PATIENT, 1 );
+
+        User user = new User( patientUserForm );
+        user.save();
+
+        user = User.getByName( "patientPW2" ); // ensure they exist
+
+        final PatientForm patient = new PatientForm();
+        patient.setAddress1( "1 Test Street" );
+        patient.setAddress2( "Address Part 2" );
+        patient.setCity( "Prag" );
+        patient.setEmail( "csc326s18.203.2@gmail.com" );
+        patient.setFirstName( "Test" );
+        patient.setLastName( "HCP" );
+        patient.setPhone( "123-456-7890" );
+        patient.setSelf( user.getUsername() );
+        patient.setState( State.NC.toString() );
+        patient.setZip( "27514" );
+        mvc.perform( post( "/api/v1/personnel" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( patient ) ) );
+
+        assertTrue( pe.matches( "123456", user.getPassword() ) );
+        changePassword( user, "123456", "654321" );
+        user = User.getByName( "patientPW2" ); // reload so changes are
+        // visible
+        assertFalse( pe.matches( "123456", user.getPassword() ) );
+        assertTrue( pe.matches( "654321", user.getPassword() ) );
+
+        // test the reset request for a known user
+        mvc.perform( post( "/api/v1/requestPasswordReset" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "patientPW2" ) ).andExpect( status().isOk() );
+
+        final Personnel p = Personnel.getByName( user );
+        p.delete();
+        user.delete();
 
     }
 

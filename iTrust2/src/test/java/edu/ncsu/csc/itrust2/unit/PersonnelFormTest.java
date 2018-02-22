@@ -1,6 +1,8 @@
 package edu.ncsu.csc.itrust2.unit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
@@ -50,4 +52,69 @@ public class PersonnelFormTest {
         assertEquals( "email@email.com", form.getEmail() );
         assertEquals( "1", form.getId() );
     }
+
+    @Test
+    public void testPatientForm () {
+        User u = new User();
+        u.setUsername( "name" );
+        PersonnelForm pf = null;
+        Personnel p = null;
+        try {
+            pf = new PersonnelForm( p );
+        }
+        catch ( final Exception e ) {
+            fail();
+        }
+        p = new Personnel();
+        p.setId( (long) 123 );
+        p.setSelf( null );
+        p.setState( State.NC );
+        try {
+            pf = new PersonnelForm( p );
+        }
+        catch ( final Exception e ) {
+            fail();
+        }
+        p.setSelf( u );
+        p.setEnabled( 0 );
+        try {
+            pf = new PersonnelForm( p );
+        }
+        catch ( final Exception e ) {
+            fail();
+        }
+        assertEquals( "0", pf.getEnabled() );
+        pf.setEnabled( "1" );
+        assertEquals( "1", pf.getEnabled() );
+
+        p.setState( null );
+        try {
+            pf = new PersonnelForm( p );
+        }
+        catch ( final Exception e ) {
+            fail();
+        }
+
+        pf = new PersonnelForm( u );
+        assertEquals( u.getUsername(), pf.getSelf() );
+        u = null;
+        pf = null;
+        pf = new PersonnelForm( u );
+        assertEquals( null, pf.getSelf() );
+
+        p.setState( State.NC );
+        pf = new PersonnelForm( p );
+        pf.setEnabled( "0" );
+        p = new Personnel( pf );
+
+        assertTrue( 1 == p.getEnabled() );
+        pf.setEnabled( null );
+        p = new Personnel( pf );
+        assertTrue( 0 == p.getEnabled() );
+
+        pf.setId( "1" );
+        p = new Personnel( pf );
+        assertTrue( 1 == p.getId() );
+    }
+
 }

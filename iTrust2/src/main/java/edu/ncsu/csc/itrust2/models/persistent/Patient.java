@@ -474,7 +474,7 @@ public class Patient extends DomainObject<Patient> implements Serializable {
      *            the email to set this patient to
      */
     public void setEmail ( final String email ) {
-        if ( lastName == null || lastName.length() > 30 || !lastName.matches( "[\\w\\.@]+" ) ) {
+        if ( email == null || !email.matches( "[\\w\\.@]+" ) || !email.contains( "@" ) || !email.contains( "." ) ) {
             throw new IllegalArgumentException( "Email must contain 1-30 characters (alphanumeric, ., _, or @)" );
         }
         this.email = email;
