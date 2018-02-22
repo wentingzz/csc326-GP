@@ -316,8 +316,8 @@ public class PasswordChangeStepDefs {
                     final long tokenId = scan.nextLong();
                     scan.close();
 
-                    content = content.substring( content.indexOf( "temporary password: " ) );
-                    content = content.substring( 20, content.indexOf( "\n" ) );
+                    content = content.substring( content.indexOf( "reset token: " ) );
+                    content = content.substring( 13, content.indexOf( "\n" ) );
                     content.trim();
 
                     if ( content.endsWith( "\n" ) ) {

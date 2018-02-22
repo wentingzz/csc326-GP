@@ -23,6 +23,7 @@ import edu.ncsu.csc.itrust2.models.persistent.User;
  * save() method on the object.
  *
  * @author Kai Presler-Marshall
+ * @author Natalie Landsberg
  *
  */
 public class HibernateDataGenerator {
@@ -144,20 +145,45 @@ public class HibernateDataGenerator {
         // generate users for testing password change & reset
         for ( int i = 1; i <= 5; i++ ) {
             final User pwtestuser = new User( "pwtestuser" + i,
-                    "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
+                    "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_PATIENT, 1 );
             pwtestuser.save();
+            final Patient pwtest = new Patient();
+            pwtest.setSelf( pwtestuser );
+            pwtest.setFirstName( "pwtest" + i );
+            pwtest.setLastName( "Smith" );
+            pwtest.setEmail( "csc326s18.203.2@gmail.com" );
+            pwtest.save();
+
         }
 
         final User lockoutUser = new User( "lockoutUser",
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
         lockoutUser.save();
+        final Patient lockout1 = new Patient();
+        lockout1.setSelf( lockoutUser );
+        lockout1.setEmail( "csc326s18.203.2@gmail.com" );
+        lockout1.save();
 
         final User lockoutUser2 = new User( "lockoutUser2",
                 "$2a$10$EblZqNptyYvcLm/VwDCVAuBjzZOI7khzdyGPBr08PpIi0na624b8.", Role.ROLE_HCP, 1 );
         lockoutUser2.save();
+        final Patient lockout2 = new Patient();
+        lockout2.setSelf( lockoutUser2 );
+        lockout2.setEmail( "csc326s18.203.2@gmail.com" );
+        lockout2.save();
 
-        final User bbtUser = new User( "csc326", "redball", Role.ROLE_PATIENT, 1 );
-        bbtUser.save();
+        final Patient csc326 = new Patient();
+        csc326.setFirstName( "csc326" );
+        final User csc326User = new User( "csc326", "$2a$10$hOCH0uJlfbR6xzKWPQToXu1RP1/yLAngFXbVKhcnteRIQ1r/bGflm",
+                Role.ROLE_PATIENT, 1 );
+        csc326User.save();
+        csc326.setSelf( csc326User );
+        csc326.setLastName( "User" );
+        csc326.setEmail( "csc326s18.203.2@gmail.com" );
+        final Calendar csc326Birth = Calendar.getInstance();
+        csc326Birth.add( Calendar.YEAR, -13 );
+        csc326.setDateOfBirth( csc326Birth );
+        csc326.save();
     }
 
     /**

@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -65,6 +66,21 @@ public class APILogEntryTest {
 
         // Test getting a non-existent log entry
         mvc.perform( get( "/api/v1/logentries/-1" ) ).andExpect( status().isNotFound() );
+    }
+
+    /**
+     * Tests new methods that get sorted logentries and accessor role
+     *
+     * @throws Exception
+     */
+    @Test
+    @WithMockUser ( username = "patient", roles = { "USER", "PATIENT" } )
+    public void testGetEntriesUser () throws Exception {
+        mvc.perform( get( "/api/v1/logentriesuser" ) ).andExpect( status().isOk() )
+                .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
+        mvc.perform( get( "/api/v1/logentriesaccrole" ) ).andExpect( status().isOk() )
+                .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
+
     }
 
 }

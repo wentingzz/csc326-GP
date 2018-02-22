@@ -1,0 +1,134 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="layout :: head(title=~{::title},links=~{})">
+	<title>View Log Entries</title>
+	
+	<!-- Angular and Bootstrap files  -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	</head>
+ 
+	<body th:include="layout :: body" th:with="content=~{::content}">
+		<div th:fragment="content">
+		
+		<script th:inline="javascript">
+		/* Otherwise Thymeleaf tries to parse Javascript as XML and breaks itself sometimes.  Sigh */
+		/*<![CDATA[*/
+			var app = angular.module("activitylog", []);
+			app.filter("dateRange", function() {
+				return function(listings, from, to){
+			    		var out = [];
+			    		from.setHours(0,0,0,0);
+			        angular.forEach(listings, function(log){
+			        		if (log.Dates.toISOString().substr(0, 10) >= from.toISOString().substr(0, 10)  && log.Dates.toISOString().substr(0, 10) <= to.toISOString().substr(0, 10)) {
+			        		    	out.push(log);
+			            	}
+			        })
+			        return out;
+			    }
+			});
+			
+			app.controller('logsCtrl', function($scope, $http) {
+				// get all logs of patient and display in table			
+				$scope.getAcc = function (i) {
+					$http.get("/iTrust2/api/v1/logentriesaccrole").then(
+				  			function(response){
+				  				code = response.data;
+				  				if (code == 1) {
+				  					$scope.logs[i].accrole = "ROLE_PATIENT";
+				  				} else if (code == 2){
+				  					$scope.logs[i].accrole = "ROLE_HCP";
+				  				} else {
+				  					$scope.logs[i].accrole = "ROLE_ADMIN";
+				  				}
+				  				  
+							}, function(rejection){
+								$scope.logs[i].accrole =  "NULL";
+							});
+    				}
+				
+				$http.get("/iTrust2/api/v1/logentriesuser").then(
+						function(response) {
+							$scope.logs = response.data;
+							for(var i = 0; i < $scope.logs.length; i++) {
+					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    			$scope.getAcc(i);
+					    		}
+							$scope.message = "";
+						}, function(rejection) {
+							$scope.logs = [];
+							$scope.message = "Unable to display log entries";
+						});
+				
+				$scope.totalDisplayed = 10;
+				$scope.from = new Date(0);
+			    $scope.to = new Date();
+				$scope.loadMore = function () {
+					$scope.totalDisplayed += 10;  
+				};
+				
+				$scope.loadFew = function() {
+					$scope.totalDisplayed -= 10;
+				};
+				
+				// Gets the role of the current user
+				$http.get("/iTrust2/api/v1/role").then(
+						function(response) {
+							$scope.currRole = response.data.message;
+							$scope.message = "";
+						}, function(rejection) {
+							$scope.currRole = null;
+							$scope.message = "Unable to get user's role";
+						});
+				
+			});
+		</script>
+		
+		<div ng-app="activitylog" ng-controller="logsCtrl">
+		
+			<!-- Info on tables from https://hello-angularjs.appspot.com/removetablerow -->
+			<div class="container">
+				<h4 style="color:red" ng-model="message"></h4>
+				
+				<h2>Logs</h2>
+				<!-- Loads 10 more logs -->
+				<button class="btn" ng-click="loadMore()">Load more logs</button>
+				<!-- Removes 10 logs -->
+				<button class="btn" ng-click="loadFew()">Load fewer logs</button>
+				<!-- Enter date range -->
+				<br>
+				<label>Start Date</label>
+				<input type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
+				<label>End Date</label>
+				<input type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
+				
+				
+				
+				<table style="width:100%" class="table table-hover">
+					<thead>
+						<tr>
+							<th>Transaction Type</th>
+							<th>Primary User</th>
+							<th>Secondary User</th>
+							<th>Time Stamp</th>
+							<th>Description</th>
+							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
+							<td name="transaction">{{a.logCode}}</td>
+							<td name="primUser">{{a.primaryUser}}</td>
+							<td name="secUser">{{a.secondaryUser}}</td>
+							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
+							<td name="description">{{a.message}}</td>
+							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
+						</tr>
+					</tbody>			
+				</table>
+			</div>
+		</div>
+		
+		</div>
+	</body>
+	
+</html>
