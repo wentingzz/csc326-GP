@@ -76,6 +76,11 @@ public class APILogEntryController extends APIController {
         return list;
     }
 
+    /**
+     * gets the log entry according to the role
+     * 
+     * @return the numerical code of the appointment type
+     */
     @GetMapping ( BASE_PATH + "/logentriesaccrole" )
     public int getAccRole () {
         return User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() ).getRole().getCode();
