@@ -597,18 +597,19 @@ public class BBTStepDefs {
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
-    public void fillAddUserForm ( final String username, final String password ) {
-        final WebElement un = driver.findElement( By.id( "username" ) );
-        un.clear();
-        un.sendKeys( username );
+    public void fillAddUserForm ( final String un, final String pw ) {
 
-        final WebElement pw = driver.findElement( By.id( "password" ) );
-        pw.clear();
-        pw.sendKeys( password );
+        final WebElement username = driver.findElement( By.id( "username" ) );
+        username.clear();
+        username.sendKeys( un );
+
+        final WebElement password = driver.findElement( By.id( "password" ) );
+        password.clear();
+        password.sendKeys( pw );
 
         final WebElement password2 = driver.findElement( By.id( "password2" ) );
         password2.clear();
-        password2.sendKeys( password );
+        password2.sendKeys( pw );
 
         final Select role = new Select( driver.findElement( By.id( "role" ) ) );
         role.selectByVisibleText( "ROLE_HCP" );
@@ -617,6 +618,31 @@ public class BBTStepDefs {
         enabled.click();
 
         driver.findElement( By.className( "btn" ) ).click();
+
+        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.id(
+        // "username" ) ) );
+        // final WebElement un = driver.findElement( By.id( "username" ) );
+        // un.clear();
+        // un.sendKeys( username );
+        //
+        // final WebElement pw = driver.findElement( By.id( "password" ) );
+        // pw.clear();
+        // pw.sendKeys( password );
+        //
+        // final WebElement password2 = driver.findElement( By.id( "password2" )
+        // );
+        // password2.clear();
+        // password2.sendKeys( password );
+        //
+        // final Select role = new Select( driver.findElement( By.id( "role" ) )
+        // );
+        // role.selectByVisibleText( "ROLE_HCP" );
+        //
+        // final WebElement enabled = driver.findElement( By.className(
+        // "checkbox" ) );
+        // enabled.click();
+        //
+        // driver.findElement( By.className( "btn" ) ).click();
     }
 
     @Then ( "The user was created successfully" )

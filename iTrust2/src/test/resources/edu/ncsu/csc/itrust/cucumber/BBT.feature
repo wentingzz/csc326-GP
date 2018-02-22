@@ -67,7 +67,7 @@ Scenario Outline: Change password without email on file
 Given The user <username> does not already exist in my database
 When I login as admin
 When I go to the Add User page
-When I fill in values in the Add User form with <username> and <password> 
+When I fill in values in the Add User form with <username> and <password>
 Then The user was created successfully
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
@@ -146,7 +146,7 @@ Examples:
 	|csc326		|redball		|yellowball  |
 	
 Scenario Outline: User cannot see admin code in access log
-Given The user does not already exist in the database
+Given The user <username> does not already exist in the database
 When I log in as admin
 When I go to the Add User page
 When I fill in the values in the Add User form with <username> and <password> 
@@ -156,4 +156,4 @@ Given I am able to log in to iTrust as <username> with password <password>
 Then I do not see the admin code in my access log
 Examples:
 	|username	|password	|
-	|csc326		|redball		|
+	|csc326.2	|redball		|

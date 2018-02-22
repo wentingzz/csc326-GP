@@ -59,6 +59,9 @@ public class APIPasswordController extends APIController {
         }
         try {
             if ( form.validateChange( user ) ) {
+                user.setPassword( pe.encode( form.getNewPassword() ) );
+                user.save();
+
                 try {
                     String addr = "";
                     String firstName = "";
@@ -83,8 +86,6 @@ public class APIPasswordController extends APIController {
                         String body = "Hello " + firstName
                                 + ", \n\nYour password has been changed. If you did not make this change, please contact us.\n";
                         body += "\n\n--iTrust2 Staff";
-                        user.setPassword( pe.encode( form.getNewPassword() ) );
-                        user.save();
                         EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
                         LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
                                 "Successfully changed password for user " + user.getUsername() );
@@ -194,6 +195,9 @@ public class APIPasswordController extends APIController {
         final User user = token.getUser();
         try {
             if ( form.validateReset( token ) ) {
+                user.setPassword( pe.encode( form.getNewPassword() ) );
+                user.save();
+                token.delete();
 
                 String addr = "";
                 String firstName = "";
@@ -221,9 +225,9 @@ public class APIPasswordController extends APIController {
                     EmailUtil.sendEmail( addr, "iTrust2 Password Reset", body );
                 }
 
-                user.setPassword( pe.encode( form.getNewPassword() ) );
-                user.save();
-                token.delete();
+                // user.setPassword( pe.encode( form.getNewPassword() ) );
+                // user.save();
+                // token.delete();
 
                 LoggerUtil.log( TransactionType.PASSWORD_UPDATE_SUCCESS, user.getUsername(),
                         "Successfully changed password for user " + user.getUsername() );

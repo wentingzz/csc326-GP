@@ -68,11 +68,12 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="a in logs | limitTo: 10" name="logentry">
-							<td name="timestamp">{{a.Dates | date: "dd/MM/yyyy hh:mm:ss"}}</td>
-							<td name="accname">{{a.primaryUser}}</td>
-							<td name="accrole">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
-							<td name="description">{{a.message}}</td>
 							<td name="transaction">{{a.logCode}}</td>
+							<td name="primUser">{{a.primaryUser}}</td>
+							<td name="secUser">{{a.secondaryUser}}</td>
+							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
+							<td name="description">{{a.message}}</td>
+							<!-- <td name="accrole">{{a.accrole}}</td> -->
 						</tr>
 					</tbody>			
 				</table>
