@@ -77,8 +77,8 @@ public class APILogEntryController extends APIController {
     }
 
     /**
-     * gets the log entry according to the role
-     * 
+     * gets the log entry according to the role of the user
+     *
      * @return the numerical code of the appointment type
      */
     @GetMapping ( BASE_PATH + "/logentriesaccrole" )
