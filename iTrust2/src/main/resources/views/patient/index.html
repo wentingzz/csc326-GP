@@ -16,30 +16,13 @@
 		/*<![CDATA[*/
 			var app = angular.module("activitylog", []);
 			app.controller('logsCtrl', function($scope, $http) {
-				$scope.getAcc = function (i) {
-					$http.get("/iTrust2/api/v1/logentriesaccrole").then(
-				  			function(response){
-				  				code = response.data;
-				  				if (code == 1) {
-				  					$scope.logs[i].accrole = "ROLE_PATIENT";
-				  				} else if (code == 2){
-				  					$scope.logs[i].accrole = "ROLE_HCP";
-				  				} else {
-				  					$scope.logs[i].accrole = "ROLE_ADMIN";
-				  				}
-				  				  
-							}, function(rejection){
-								$scope.logs[i].accrole =  "NULL";
-							});
-    				}
 				// get all logs of patient and display in table			
 				$http.get("/iTrust2/api/v1/logentriesuser").then(
 						function(response) {
 							$scope.logs = response.data;
 							for(var i = 0; i < $scope.logs.length; i++) {
-				    				$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
-				    				$scope.getAcc(i);
-				    			}
+					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    		}
 							$scope.message = "";
 						}, function(rejection) {
 							$scope.logs = [];
