@@ -16,14 +16,14 @@
 			var app = angular.module("activitylog", []);
 			app.filter("dateRange", function() {
 				return function(listings, from, to){
-			    		var out = [];
-			    		from.setHours(0,0,0,0);
+					var out = [];
+					from.setHours(0,0,0,0);
 			        angular.forEach(listings, function(log){
 			        		if (log.Dates.toISOString().substr(0, 10) >= from.toISOString().substr(0, 10)  && log.Dates.toISOString().substr(0, 10) <= to.toISOString().substr(0, 10)) {
 			        		    	out.push(log);
 			            	}
 			        })
-			        return out;
+					return out;
 			    }
 			});
 			
@@ -83,6 +83,9 @@
 				<label>End Date</label>
 				<input type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
 				
+				<div ng-if="from > to">
+				<p>Error Message: The start date should be before the end date</p>
+				</div>
 				
 				
 				<table style="width:100%" class="table table-hover">
@@ -97,7 +100,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
+						<tr ng-show="from <= to" ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
 							<td name="transaction">{{a.logCode}}</td>
 							<td name="primUser">{{a.primaryUser}}</td>
 							<td name="secUser">{{a.secondaryUser}}</td>
@@ -105,7 +108,8 @@
 							<td name="description">{{a.message}}</td>
 							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.secondaryUserRole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 						</tr>
-					</tbody>			
+					</tbody>	
+					
 				</table>
 			</div>
 		</div>
