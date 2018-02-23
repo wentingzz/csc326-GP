@@ -103,7 +103,7 @@
 							<td name="secUser">{{a.secondaryUser}}</td>
 							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
 							<td name="description">{{a.message}}</td>
-							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
+							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.secondaryUserRole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 						</tr>
 					</tbody>			
 				</table>

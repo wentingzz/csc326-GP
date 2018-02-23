@@ -52,6 +52,11 @@ public class LogEntry extends DomainObject<LogEntry> {
     private String          secondaryUser;
 
     /**
+     * The role of the secondary user
+     */
+    private String          secondaryUserRole;
+
+    /**
      * An additional elaborative message for the event that has been logged.
      * Optional.
      */
@@ -188,6 +193,22 @@ public class LogEntry extends DomainObject<LogEntry> {
      */
     public void setSecondaryUser ( final String secondaryUser ) {
         this.secondaryUser = secondaryUser;
+        try {
+            final int code = User.getByName( secondaryUser ).getRole().getCode();
+            if ( code == 1 ) {
+                secondaryUserRole = "patient";
+            }
+            else if ( code == 2 ) {
+                secondaryUserRole = "hcp";
+            }
+            else if ( code == 3 ) {
+                secondaryUserRole = "admin";
+            }
+        }
+        catch ( final Exception e ) {
+            secondaryUserRole = "";
+        }
+
     }
 
     /**
