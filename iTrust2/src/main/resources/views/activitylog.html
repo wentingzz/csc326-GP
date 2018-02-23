@@ -49,7 +49,9 @@
 				};
 				
 				$scope.loadFew = function() {
-					$scope.totalDisplayed -= 10;
+					if ($scope.totalDisplayed != 0) {
+						$scope.totalDisplayed -= 10;
+					}
 				};
 				
 				// Gets the role of the current user
