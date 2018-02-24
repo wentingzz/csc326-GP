@@ -33,7 +33,10 @@
 						function(response) {
 							$scope.logs = response.data;
 							for(var i = 0; i < $scope.logs.length; i++) {
-					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, 
+					    											$scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, 
+					    											$scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    			
 					    		}
 							$scope.message = "";
 						}, function(rejection) {
@@ -49,8 +52,12 @@
 				};
 				
 				$scope.loadFew = function() {
-					if ($scope.totalDisplayed != 0) {
-						$scope.totalDisplayed -= 10;
+					if($scope.totalDisplayed > 0) {
+						if ($scope.totalDisplayed < 10) {
+							$scope.totalDisplayed -= $scope.totalDisplayed;
+						} else {
+							$scope.totalDisplayed -= 10;
+						}
 					}
 				};
 				
@@ -63,6 +70,7 @@
 							$scope.currRole = null;
 							$scope.message = "Unable to get user's role";
 						});
+				
 				
 			});
 		</script>
@@ -81,12 +89,12 @@
 				<!-- Enter date range -->
 				<br>
 				<label>Start Date</label>
-				<input type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
+					<input name="startdate" type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
 				<label>End Date</label>
-				<input type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
+					<input name="enddate" type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
 				
 				<div ng-if="from > to">
-				<p>Error Message: The start date should be before the end date</p>
+					<p>Error Message: The start date should be before the end date</p>
 				</div>
 				
 				
@@ -98,7 +106,7 @@
 							<th>Secondary User</th>
 							<th>Time Stamp</th>
 							<th>Description</th>
-							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
+							<th ng-show="currRole === 'ROLE_PATIENT'">Other User's Role</th>
 						</tr>
 					</thead>
 					<tbody>
