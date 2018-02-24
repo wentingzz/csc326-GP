@@ -51,7 +51,7 @@ Then I do not see any log entries
 And I see an option to re-select the range of dates
 Examples:
 	|username	|password	|startdate	|enddate	 |
-	|csc326		|redball		|02/06/2018	|02/05/2018|
+	|csc326		|redball		|02/02/2020	|02/05/2018|
 	
 Scenario Outline: View more than 10 logs
 Given I am able to log in to iTrust as <username> with password <password>

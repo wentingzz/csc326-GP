@@ -638,7 +638,7 @@ public class BBTStepDefs {
     }
 
     @Then ( "I see access logs with 6 log entries" )
-    public void showFourLogs () {
+    public void showSixLogs () {
         // if the log is on the home page, then it will show up in the home
         // page's source
         // TODO add check for the 4 log entries, maybe get table elements?
@@ -672,6 +672,19 @@ public class BBTStepDefs {
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
         // TODO
+        final WebElement from = driver.findElement( By.name( "startdate" ) );
+        final String startMonth = startDate.substring( 0, 2 );
+        final String startDay = startDate.substring( 3, 5 );
+        final String startYear = startDate.substring( 5, 9 );
+        from.sendKeys( startMonth + startDay + startYear );
+
+        final WebElement to = driver.findElement( By.name( "startdate" ) );
+        final String endMonth = startDate.substring( 0, 2 );
+        final String endDay = startDate.substring( 3, 5 );
+        final String endYear = startDate.substring( 5, 9 );
+        to.sendKeys( endMonth + endDay + endYear );
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == 0 );
 
     }
 
