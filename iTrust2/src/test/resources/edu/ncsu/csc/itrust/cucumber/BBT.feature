@@ -6,8 +6,6 @@ Feature: Change or Reset password send email
 	I want to view access logs
 	And make sure an email is sent to me
 
-
-
 Scenario Outline: Change password without email on file
 Given The user <username> does not already exist in my database
 When I login as admin

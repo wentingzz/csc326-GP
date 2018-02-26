@@ -59,7 +59,7 @@ public class BBTStepDefs {
 
         ChromeDriverManager.getInstance().setup();
         final ChromeOptions options = new ChromeOptions();
-        // options.addArguments( "headless" );
+        options.addArguments( "headless" );
         options.addArguments( "window-size=1200x600" );
         options.addArguments( "blink-settings=imagesEnabled=false" );
         driver = new ChromeDriver( options );
@@ -591,22 +591,30 @@ public class BBTStepDefs {
             ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
         }
         catch ( final Exception e ) {
-            driver.get( "http://localhost:8080/iTrust2/addUser" );
+            driver.get( "http://localhost:8080/iTrust2/admin/addUser" );
         }
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
     public void fillAddUserForm ( final String un, final String pw ) {
-
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "username" ) ) );
         final WebElement username = driver.findElement( By.id( "username" ) );
         username.clear();
         username.sendKeys( un );
 
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "password" ) ) );
         final WebElement password = driver.findElement( By.id( "password" ) );
         password.clear();
         password.sendKeys( pw );
 
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
+        try {
+            Thread.sleep( 500 );
+        }
+        catch ( final InterruptedException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        final WebElement password2 = driver.findElement( By.name( "password2" ) );
         password2.clear();
         password2.sendKeys( pw );
 
@@ -617,6 +625,12 @@ public class BBTStepDefs {
         enabled.click();
 
         driver.findElement( By.className( "btn" ) ).click();
+    }
+
+    @Then ( "I do not see the admin code in my access log" )
+    public void noSeeAdmin () {
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == 1 );
     }
 
     @Then ( "The user was created successfully" )
