@@ -79,20 +79,12 @@ Examples:
 	|csc326Logs2		|redball		|yellowball  |
 	
 Scenario Outline: User cannot see admin code in access log
-Given The user <username> does not already exist in my database
-When I log in as admin
-When I go to the Add User page
-When I fill in values in the Add User form with <username> and <password> 
-Then The user was created successfully
-And I sign out as admin
 Given I am able to log in to iTrust as <username> with password <password>
 Then I do not see the admin code in my access log
 Examples:
 	|username	|password	|
 	|csc326.2	|redball		|
 	
-
-#Move to top
 Scenario Outline: Change password correctly
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
@@ -102,7 +94,7 @@ And a password email is sent to the patient with address <email>
 Examples:
 	|username   |password|newPassword|email	|
 	|csc326     |redball	|yellowball	|csc326s18.203.2@gmail.com	|
-#	|pwtestuser2|123456  | 654321    | csc326s18.203.2@gmail.com    |
+	|pwtestuser2|123456  | 654321    | csc326s18.203.2@gmail.com    |
 
 Scenario Outline: Appointment declined
 Given I am able to log in to iTrust as <username> with password <password>
@@ -119,7 +111,7 @@ And a declined email is sent to the user with address <email>
 Examples:
 	|username   |password|email	|
 	|csc326     |redball	|csc326s18.203.2@gmail.com	|
-#	|pwtestuser2|123456  | csc326s18.203.2@gmail.com    |
+	|pwtestuser2|123456  | csc326s18.203.2@gmail.com    |
 	
 Scenario Outline: Appointment approved
 Given I am able to log in to iTrust as <username> with password <password>
