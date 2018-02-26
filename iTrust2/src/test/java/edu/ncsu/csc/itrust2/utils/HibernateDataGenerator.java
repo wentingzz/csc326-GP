@@ -212,7 +212,7 @@ public class HibernateDataGenerator {
         csc326Logs2.save();
 
         final Patient csc326Logs3 = new Patient();
-        csc326Logs3.setFirstName( "csc326.2" );
+        csc326Logs3.setFirstName( "csc326-2" );
         final User csc326UserLogs3 = new User( "csc326.2",
                 "$2a$10$hOCH0uJlfbR6xzKWPQToXu1RP1/yLAngFXbVKhcnteRIQ1r/bGflm", Role.ROLE_PATIENT, 1 );
         csc326UserLogs3.save();
