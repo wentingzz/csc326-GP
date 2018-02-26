@@ -16,42 +16,27 @@
 			var app = angular.module("activitylog", []);
 			app.filter("dateRange", function() {
 				return function(listings, from, to){
-			    		var out = [];
-			    		from.setHours(0,0,0,0);
+					var out = [];
+					from.setHours(0,0,0,0);
 			        angular.forEach(listings, function(log){
 			        		if (log.Dates.toISOString().substr(0, 10) >= from.toISOString().substr(0, 10)  && log.Dates.toISOString().substr(0, 10) <= to.toISOString().substr(0, 10)) {
 			        		    	out.push(log);
 			            	}
 			        })
-			        return out;
+					return out;
 			    }
 			});
 			
 			app.controller('logsCtrl', function($scope, $http) {
-				// get all logs of patient and display in table			
-				$scope.getAcc = function (i) {
-					$http.get("/iTrust2/api/v1/logentriesaccrole").then(
-				  			function(response){
-				  				code = response.data;
-				  				if (code == 1) {
-				  					$scope.logs[i].accrole = "ROLE_PATIENT";
-				  				} else if (code == 2){
-				  					$scope.logs[i].accrole = "ROLE_HCP";
-				  				} else {
-				  					$scope.logs[i].accrole = "ROLE_ADMIN";
-				  				}
-				  				  
-							}, function(rejection){
-								$scope.logs[i].accrole =  "NULL";
-							});
-    				}
 				
 				$http.get("/iTrust2/api/v1/logentriesuser").then(
 						function(response) {
 							$scope.logs = response.data;
 							for(var i = 0; i < $scope.logs.length; i++) {
-					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, $scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, $scope.logs[i].time.minute, $scope.logs[i].time.second);
-					    			$scope.getAcc(i);
+					    			$scope.logs[i].Dates = new Date($scope.logs[i].time.year, $scope.logs[i].time.month, 
+					    											$scope.logs[i].time.dayOfMonth, $scope.logs[i].time.hourOfDay, 
+					    											$scope.logs[i].time.minute, $scope.logs[i].time.second);
+					    			
 					    		}
 							$scope.message = "";
 						}, function(rejection) {
@@ -67,7 +52,13 @@
 				};
 				
 				$scope.loadFew = function() {
-					$scope.totalDisplayed -= 10;
+					if($scope.totalDisplayed > 0) {
+						if ($scope.totalDisplayed < 10) {
+							$scope.totalDisplayed -= $scope.totalDisplayed;
+						} else {
+							$scope.totalDisplayed -= 10;
+						}
+					}
 				};
 				
 				// Gets the role of the current user
@@ -79,6 +70,7 @@
 							$scope.currRole = null;
 							$scope.message = "Unable to get user's role";
 						});
+				
 				
 			});
 		</script>
@@ -97,13 +89,16 @@
 				<!-- Enter date range -->
 				<br>
 				<label>Start Date</label>
-				<input type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
+					<input name="startdate" type="date" class="form-control" ng-model="from" placeholder="MM/DD/YYYY">
 				<label>End Date</label>
-				<input type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
+					<input name="enddate" type="date" class="form-control" ng-model="to" placeholder="MM/DD/YYYY">
+				
+				<div ng-if="from > to">
+					<p>Error Message: The start date should be before the end date</p>
+				</div>
 				
 				
-				
-				<table style="width:100%" class="table table-hover">
+				<table style="width:100%" class="table table-hover" id="logtable">
 					<thead>
 						<tr>
 							<th>Transaction Type</th>
@@ -111,19 +106,20 @@
 							<th>Secondary User</th>
 							<th>Time Stamp</th>
 							<th>Description</th>
-							<th ng-show="currRole === 'ROLE_PATIENT'">Accessor Role</th>
+							<th ng-show="currRole === 'ROLE_PATIENT'">Other User's Role</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
+						<tr ng-show="from <= to" ng-repeat="a in logs | dateRange:from:to | limitTo:totalDisplayed">
 							<td name="transaction">{{a.logCode}}</td>
 							<td name="primUser">{{a.primaryUser}}</td>
 							<td name="secUser">{{a.secondaryUser}}</td>
 							<td name="timestamp">{{a.Dates | date: "MM/dd/yyyy hh:mm:ss"}}</td>
 							<td name="description">{{a.message}}</td>
-							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.accrole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
+							<td name="accrole" ng-show="currRole === 'ROLE_PATIENT'">{{a.secondaryUserRole}}</td>	<!-- Need to have code to get accessor role from name (find method) -->
 						</tr>
-					</tbody>			
+					</tbody>	
+					
 				</table>
 			</div>
 		</div>

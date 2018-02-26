@@ -79,14 +79,15 @@ public class AppointmentController {
         }
         else {
             req.save();
-            LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_SUBMITTED, form.getPatient() );
+            LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_SUBMITTED, User.getByName( form.getPatient() ),
+                    User.getByName( form.getHcp() ) );
             return "patient/requestAppointmentResult";
         }
     }
 
     /**
      * Creates a page of all AppointmentRequests so the patient can view them
-     * 
+     *
      * @param model
      *            Data from the front end
      * @return The page for the patient to view their appointment requests

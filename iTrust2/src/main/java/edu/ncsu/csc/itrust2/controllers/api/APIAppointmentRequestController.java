@@ -94,37 +94,32 @@ public class APIAppointmentRequestController extends APIController {
             final String name = requestF.getPatient();
             final User user = User.getByName( name );
 
-            try {
-                String addr = "";
-                String firstName = "";
-                final Personnel person = Personnel.getByName( user );
-                if ( person != null ) {
-                    addr = person.getEmail();
-                    firstName = person.getFirstName();
-                }
-                else {
-                    final Patient patient = Patient.getPatient( user );
-                    if ( patient != null ) {
-                        addr = patient.getEmail();
-                        firstName = patient.getFirstName();
-                    }
-
-                }
-
-                if ( addr == null || "".equals( addr ) ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
-                            "An email should have been sent to you, but there is no email associated with your account." );
-                }
-                else {
-                    String body = "Dear " + firstName + ", \n\nWe receieved your request to make an appointment.\n";
-                    body += "--iTrust2 Admin";
-                    EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
-                    LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_EMAIL_SENT,
-                            "An email regarding your appointment request has been sent." );
-                }
+            String addr = "";
+            String firstName = "";
+            final Personnel person = Personnel.getByName( user );
+            if ( person != null ) {
+                addr = person.getEmail();
+                firstName = person.getFirstName();
             }
-            catch ( final NullPointerException npe ) {
-                // No email or something, move on
+            else {
+                final Patient patient = Patient.getPatient( user );
+                if ( patient != null ) {
+                    addr = patient.getEmail();
+                    firstName = patient.getFirstName();
+                }
+
+            }
+
+            if ( addr == null || "".equals( addr ) ) {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+            }
+            else {
+                String body = "Dear " + firstName + ", \n\nWe receieved your request to make an appointment.\n";
+                body += "--iTrust2 Admin";
+                EmailUtil.sendEmail( addr, "iTrust2 Appointment Request", body );
+                LoggerUtil.log( TransactionType.APPOINTMENT_REQUEST_EMAIL_SENT,
+                        "An email regarding your appointment request has been sent." );
             }
 
             request.save();
@@ -159,38 +154,33 @@ public class APIAppointmentRequestController extends APIController {
 
         try {
 
-            try {
-                final String name = request.getPatient().getUsername();
-                final User user = User.getByName( name );
-                String addr = "";
-                String firstName = "";
-                final Personnel person = Personnel.getByName( user );
-                if ( person != null ) {
-                    addr = person.getEmail();
-                    firstName = person.getFirstName();
-                }
-                else {
-                    final Patient patient = Patient.getPatient( user );
-                    if ( patient != null ) {
-                        addr = patient.getEmail();
-                        firstName = patient.getFirstName();
-                    }
-                }
-
-                if ( addr == null || "".equals( addr ) ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
-                            "An email should have been sent to you, but there is no email associated with your account." );
-                }
-                else {
-                    String body = "Dear " + firstName + ", \n\nWe receieved your request to delete your appointment.\n";
-                    body += "--iTrust2 Admin";
-                    EmailUtil.sendEmail( addr, "iTrust2 Request to Delete Appointment", body );
-                    LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
-                            "An email regarding your appointment has been sent." );
+            final String name = request.getPatient().getUsername();
+            final User user = User.getByName( name );
+            String addr = "";
+            String firstName = "";
+            final Personnel person = Personnel.getByName( user );
+            if ( person != null ) {
+                addr = person.getEmail();
+                firstName = person.getFirstName();
+            }
+            else {
+                final Patient patient = Patient.getPatient( user );
+                if ( patient != null ) {
+                    addr = patient.getEmail();
+                    firstName = patient.getFirstName();
                 }
             }
-            catch ( final NullPointerException npe ) {
-                // No email or something, continue on
+
+            if ( addr == null || "".equals( addr ) ) {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+            }
+            else {
+                String body = "Dear " + firstName + ", \n\nWe receieved your request to delete your appointment.\n";
+                body += "--iTrust2 Admin";
+                EmailUtil.sendEmail( addr, "iTrust2 Request to Delete Appointment", body );
+                LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
+                        "An email regarding your appointment has been sent." );
             }
 
             request.delete();
@@ -237,39 +227,34 @@ public class APIAppointmentRequestController extends APIController {
                         HttpStatus.NOT_FOUND );
             }
 
-            try {
-                final String name = request.getPatient().getUsername();
-                final User user = User.getByName( name );
+            final String name = request.getPatient().getUsername();
+            final User user = User.getByName( name );
 
-                String addr = "";
-                String firstName = "";
-                final Personnel person = Personnel.getByName( user );
-                if ( person != null ) {
-                    addr = person.getEmail();
-                    firstName = person.getFirstName();
-                }
-                else {
-                    final Patient patient = Patient.getPatient( user );
-                    if ( patient != null ) {
-                        addr = patient.getEmail();
-                        firstName = patient.getFirstName();
-                    }
-                }
-
-                if ( addr == null || "".equals( addr ) ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
-                            "An email should have been sent to you, but there is no email associated with your account." );
-                }
-                else {
-                    String body = "Dear " + firstName + ", \n\nThe status of your appointment has updated.\n";
-                    body += "--iTrust2 Admin";
-                    EmailUtil.sendEmail( addr, "iTrust2 Updated Appointment", body );
-                    LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
-                            "An email regarding your appointment has been sent." );
+            String addr = "";
+            String firstName = "";
+            final Personnel person = Personnel.getByName( user );
+            if ( person != null ) {
+                addr = person.getEmail();
+                firstName = person.getFirstName();
+            }
+            else {
+                final Patient patient = Patient.getPatient( user );
+                if ( patient != null ) {
+                    addr = patient.getEmail();
+                    firstName = patient.getFirstName();
                 }
             }
-            catch ( final NullPointerException npe ) {
-                // No email or something, continue on
+
+            if ( addr == null || "".equals( addr ) ) {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+            }
+            else {
+                String body = "Dear " + firstName + ", \n\nThe status of your appointment has updated.\n";
+                body += "--iTrust2 Admin";
+                EmailUtil.sendEmail( addr, "iTrust2 Updated Appointment", body );
+                LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
+                        "An email regarding your appointment has been sent." );
             }
 
             request.save();
@@ -298,39 +283,34 @@ public class APIAppointmentRequestController extends APIController {
         try {
             DomainObject.deleteAll( AppointmentRequest.class );
 
-            try {
-                final String name = SecurityContextHolder.getContext().getAuthentication().getName();
-                final User user = User.getByName( name );
-                String addr = "";
-                String firstName = "";
-                final Personnel person = Personnel.getByName( user );
-                if ( person != null ) {
-                    addr = person.getEmail();
-                    firstName = person.getFirstName();
-                }
-                else {
-                    final Patient patient = Patient.getPatient( user );
-                    if ( patient != null ) {
-                        addr = patient.getEmail();
-                        firstName = patient.getFirstName();
-                    }
-                }
-
-                if ( addr == null || "".equals( addr ) ) {
-                    LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
-                            "An email should have been sent to you, but there is no email associated with your account." );
-                }
-                else {
-                    String body = "Dear " + firstName
-                            + ", \n\nWe receieved your request to delete all your appointments.\n";
-                    body += "--iTrust2 Admin";
-                    EmailUtil.sendEmail( addr, "iTrust2 Deleting Appointments", body );
-                    LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
-                            "An email regarding your appointments has been sent." );
+            final String name = SecurityContextHolder.getContext().getAuthentication().getName();
+            final User user = User.getByName( name );
+            String addr = "";
+            String firstName = "";
+            final Personnel person = Personnel.getByName( user );
+            if ( person != null ) {
+                addr = person.getEmail();
+                firstName = person.getFirstName();
+            }
+            else {
+                final Patient patient = Patient.getPatient( user );
+                if ( patient != null ) {
+                    addr = patient.getEmail();
+                    firstName = patient.getFirstName();
                 }
             }
-            catch ( final NullPointerException npe ) {
-                // No email or something, continue on
+
+            if ( addr == null || "".equals( addr ) ) {
+                LoggerUtil.log( TransactionType.NOTIFICATION_EMAIL_NOT_SENT, name,
+                        "An email should have been sent to you, but there is no email associated with your account." );
+            }
+            else {
+                String body = "Dear " + firstName
+                        + ", \n\nWe receieved your request to delete all your appointments.\n";
+                body += "--iTrust2 Admin";
+                EmailUtil.sendEmail( addr, "iTrust2 Deleting Appointments", body );
+                LoggerUtil.log( TransactionType.CHANGE_EMAIL_SENT,
+                        "An email regarding your appointments has been sent." );
             }
 
             return new ResponseEntity( successResponse( "Successfully deleted all AppointmentRequests" ),
