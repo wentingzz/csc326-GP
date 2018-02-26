@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 public class LogsController {
     /**
-     * Create a page for the patient to view all logs
+     * Create a page for the user to view all logs
      *
      * @param model
      *            data for front end

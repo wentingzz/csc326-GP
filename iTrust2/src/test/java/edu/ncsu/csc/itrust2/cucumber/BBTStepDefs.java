@@ -17,7 +17,6 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -43,6 +42,7 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  * Step definitions for the BBT feature file.
  *
  * @author Natalie Landsberg
+ * @author Hannah Morrison
  *
  */
 public class BBTStepDefs {
@@ -70,10 +70,6 @@ public class BBTStepDefs {
     @After
     public void tearDown () {
         driver.close();
-    }
-
-    @AfterClass
-    public void killChrome () {
         driver.quit();
     }
 
@@ -146,9 +142,8 @@ public class BBTStepDefs {
     @Then ( "My password is updated successfully" )
     public void verifyPass () {
         try {
-            // wait.until( ExpectedConditions.textToBePresentInElementLocated(
-            // By.name( "message" ),
-            // "Password changed successfully" ) );
+            wait.until( ExpectedConditions.textToBePresentInElementLocated( By.name( "message" ),
+                    "Password changed successfully" ) );
             assertFalse( driver.getPageSource().contains( "Could not change" ) );
         }
         catch ( final Exception e ) {
@@ -336,7 +331,6 @@ public class BBTStepDefs {
     @When ( "I go to the Request Appointment page" )
     public void navReqAppt () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
-        // assertTrue( true );
     }
 
     @When ( "I fill in values for the Appointment Request Fields" )
@@ -593,21 +587,34 @@ public class BBTStepDefs {
 
     @When ( "I go to the Add User page" )
     public void navAddUser () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/admin/addUser" );
+        }
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
     public void fillAddUserForm ( final String un, final String pw ) {
-
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "username" ) ) );
         final WebElement username = driver.findElement( By.id( "username" ) );
         username.clear();
         username.sendKeys( un );
 
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "password" ) ) );
         final WebElement password = driver.findElement( By.id( "password" ) );
         password.clear();
         password.sendKeys( pw );
 
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
+        try {
+            Thread.sleep( 500 );
+        }
+        catch ( final InterruptedException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        final WebElement password2 = driver.findElement( By.name( "password2" ) );
         password2.clear();
         password2.sendKeys( pw );
 
@@ -618,31 +625,12 @@ public class BBTStepDefs {
         enabled.click();
 
         driver.findElement( By.className( "btn" ) ).click();
+    }
 
-        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.id(
-        // "username" ) ) );
-        // final WebElement un = driver.findElement( By.id( "username" ) );
-        // un.clear();
-        // un.sendKeys( username );
-        //
-        // final WebElement pw = driver.findElement( By.id( "password" ) );
-        // pw.clear();
-        // pw.sendKeys( password );
-        //
-        // final WebElement password2 = driver.findElement( By.id( "password2" )
-        // );
-        // password2.clear();
-        // password2.sendKeys( password );
-        //
-        // final Select role = new Select( driver.findElement( By.id( "role" ) )
-        // );
-        // role.selectByVisibleText( "ROLE_HCP" );
-        //
-        // final WebElement enabled = driver.findElement( By.className(
-        // "checkbox" ) );
-        // enabled.click();
-        //
-        // driver.findElement( By.className( "btn" ) ).click();
+    @Then ( "I do not see the admin code in my access log" )
+    public void noSeeAdmin () {
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == 1 );
     }
 
     @Then ( "The user was created successfully" )
@@ -665,63 +653,95 @@ public class BBTStepDefs {
 
     }
 
-    @Then ( "I see access logs with 4 log entries" )
-    public void showFourLogs () {
+    @Then ( "I see access logs with (.+) log entries" )
+    public void showSixLogs ( final int numLogs ) {
         // if the log is on the home page, then it will show up in the home
         // page's source
-        // TODO add check for the 4 log entries, maybe get table elements?
         driver.getPageSource().contains( "activitylog" );
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == numLogs );
+        // doesn't work, just generates JS code
+        // final WebElement table_element = driver.findElement( By.id(
+        // "logtable" ) );
+        // final List<WebElement> tr_collection = table_element.findElements(
+        // By.xpath( "id('logtable')/tbody/tr" ) );
+        //
+        // int row_num, col_num;
+        // row_num = 1;
+        // for ( final WebElement trElement : tr_collection ) {
+        // final List<WebElement> td_collection = trElement.findElements(
+        // By.xpath( "td" ) );
+        // System.out.println( "NUMBER OF COLUMNS=" + td_collection.size() );
+        // col_num = 1;
+        // for ( final WebElement tdElement : td_collection ) {
+        // System.out.println( "row # " + row_num + ", col # " + col_num +
+        // "text=" + tdElement.getText() );
+        // assertTrue( tdElement.getText().contains( "LOGIN_SUCCESS" )
+        // || tdElement.getText().contains( "PASSWORD_UPDATE_SUCCESS" )
+        // || tdElement.getText().contains( "EDIT_DEMOGRAPHICS" )
+        // || tdElement.getText().contains( "VIEW_DEMOGRAPHICS" )
+        // || tdElement.getText().contains( "APPOINTMENT_REQUEST_VIEWED" )
+        // || tdElement.getText().contains( "APPOINTMENT_REQUEST_SUBMITTED" ) );
+        //
+        // col_num++;
+        // }
+        // row_num++;
+        // }
+        // try {
+        // Thread.sleep( 500000 );
+        // }
+        // catch ( final InterruptedException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
     }
 
     @When ( "I go to the access log page" )
     public void goToAccessLogPage () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/activitylog" );
+        }
     }
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
     public void enterDates ( final String startDate, final String endDate ) {
-        // TODO
-        // final WebElement from = driver.findElement( By.xpath(
-        // "//input[@ng-model='from']" ) );
-        // from.clear();
-        // from.sendKeys( startDate );
-        // final WebElement to = driver.findElement( By.xpath(
-        // "//input[@ng-model='to']" ) );
-        // to.clear();
-        // to.sendKeys( endDate );
-        // final WebElement submit = driver.findElement( By.className( "btn" )
-        // );
-        // submit.click();
+        final WebElement from = driver.findElement( By.name( "startdate" ) );
+        final String startMonth = startDate.substring( 0, 2 );
+        final String startDay = startDate.substring( 3, 5 );
+        final String startYear = startDate.substring( 5, 9 );
+        from.sendKeys( startMonth + startDay + startYear );
+
+        final WebElement to = driver.findElement( By.name( "startdate" ) );
+        final String endMonth = startDate.substring( 0, 2 );
+        final String endDay = startDate.substring( 3, 5 );
+        final String endYear = startDate.substring( 5, 9 );
+        to.sendKeys( endMonth + endDay + endYear );
     }
 
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
-        // TODO
-        // final WebElement from = driver.findElement( By.xpath(
-        // "//input[@ng-model='from']" ) );
-        // from.clear();
-        // from.sendKeys( startDate );
-        // final WebElement to = driver.findElement( By.xpath(
-        // "//input[@ng-model='to']" ) );
-        // to.clear();
-        // to.sendKeys( endDate );
-        // final WebElement submit = driver.findElement( By.className( "btn" )
-        // );
-        // submit.click();
+        final WebElement from = driver.findElement( By.name( "startdate" ) );
+        final String startMonth = startDate.substring( 0, 2 );
+        final String startDay = startDate.substring( 3, 5 );
+        final String startYear = startDate.substring( 5, 9 );
+        from.sendKeys( startMonth + startDay + startYear );
+
+        final WebElement to = driver.findElement( By.name( "startdate" ) );
+        final String endMonth = startDate.substring( 0, 2 );
+        final String endDay = startDate.substring( 3, 5 );
+        final String endYear = startDate.substring( 5, 9 );
+        to.sendKeys( endMonth + endDay + endYear );
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == 0 );
 
     }
 
     @Then ( "I do not see any log entries" )
     public void noLogEntries () {
-        assertTrue( driver.getPageSource().contains( "Unable to display log entries" ) );
-
-    }
-
-    @Then ( "I see an option to re-select the range of dates" )
-    public void reselectDates () {
-        // not sure if this is an adequate test;
-        // it wouldn't display log entries if the range isn't correct
-        assertTrue( driver.getPageSource().contains( "Unable to display log entries" ) );
+        assertTrue( driver.getPageSource().contains( "Error Message: The start date should be before the end date" ) );
 
     }
 
@@ -729,7 +749,27 @@ public class BBTStepDefs {
     public void signOut () {
         final WebElement logout = driver.findElement( By.id( "logout" ) );
         logout.click();
-        // new NgWebDriver( (ChromeDriver) driver
-        // ).waitForAngularRequestsToFinish();
     }
+
+    @Then ( "I view my demographics" )
+    public void viewDemos () {
+        try {
+            ( (JavascriptExecutor) driver )
+                    .executeScript( "document.getElementById('editdemographics-patient').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/patient/editDemographics" );
+        }
+    }
+
+    @Then ( "I edit my preferred name field" )
+    public void editNickname () {
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.name( "preferredName" ) ) );
+        final WebElement prefName = driver.findElement( By.id( "preferredName" ) );
+        prefName.clear();
+        prefName.sendKeys( "newNickname" );
+        final WebElement submit = driver.findElement( By.className( "btn" ) );
+        submit.click();
+    }
+
 }

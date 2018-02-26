@@ -55,6 +55,8 @@ public class APILogEntryController extends APIController {
                 : new ResponseEntity( entry, HttpStatus.OK );
     }
 
+    // List<Integer> accRole;
+
     /**
      * Get all log entries for a specified user
      *
@@ -67,6 +69,7 @@ public class APILogEntryController extends APIController {
             return null;
         }
         final List<LogEntry> list = LogEntry.getAllForUser( self.getUsername() );
+        // accRole = new ArrayList<Integer>();
         list.sort( new Comparator<Object>() {
             @Override
             public int compare ( final Object arg0, final Object arg1 ) {
@@ -74,15 +77,5 @@ public class APILogEntryController extends APIController {
             }
         } );
         return list;
-    }
-
-    /**
-     * gets the log entry according to the role of the user
-     *
-     * @return the numerical code of the appointment type
-     */
-    @GetMapping ( BASE_PATH + "/logentriesaccrole" )
-    public int getAccRole () {
-        return User.getByName( SecurityContextHolder.getContext().getAuthentication().getName() ).getRole().getCode();
     }
 }
