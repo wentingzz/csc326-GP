@@ -42,6 +42,7 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  * Step definitions for the BBT feature file.
  *
  * @author Natalie Landsberg
+ * @author Hannah Morrison
  *
  */
 public class BBTStepDefs {
@@ -330,7 +331,6 @@ public class BBTStepDefs {
     @When ( "I go to the Request Appointment page" )
     public void navReqAppt () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
-        // assertTrue( true );
     }
 
     @When ( "I fill in values for the Appointment Request Fields" )
@@ -587,21 +587,34 @@ public class BBTStepDefs {
 
     @When ( "I go to the Add User page" )
     public void navAddUser () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/admin/addUser" );
+        }
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
     public void fillAddUserForm ( final String un, final String pw ) {
-
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "username" ) ) );
         final WebElement username = driver.findElement( By.id( "username" ) );
         username.clear();
         username.sendKeys( un );
 
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.id( "password" ) ) );
         final WebElement password = driver.findElement( By.id( "password" ) );
         password.clear();
         password.sendKeys( pw );
 
-        final WebElement password2 = driver.findElement( By.id( "password2" ) );
+        try {
+            Thread.sleep( 500 );
+        }
+        catch ( final InterruptedException e ) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        final WebElement password2 = driver.findElement( By.name( "password2" ) );
         password2.clear();
         password2.sendKeys( pw );
 
@@ -612,6 +625,12 @@ public class BBTStepDefs {
         enabled.click();
 
         driver.findElement( By.className( "btn" ) ).click();
+    }
+
+    @Then ( "I do not see the admin code in my access log" )
+    public void noSeeAdmin () {
+        final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
+        assertTrue( tableRows.size() == 1 );
     }
 
     @Then ( "The user was created successfully" )
@@ -679,7 +698,12 @@ public class BBTStepDefs {
 
     @When ( "I go to the access log page" )
     public void goToAccessLogPage () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/activitylog" );
+        }
     }
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
@@ -729,11 +753,18 @@ public class BBTStepDefs {
 
     @Then ( "I view my demographics" )
     public void viewDemos () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('editdemographics-patient').click();" );
+        try {
+            ( (JavascriptExecutor) driver )
+                    .executeScript( "document.getElementById('editdemographics-patient').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/patient/editDemographics" );
+        }
     }
 
     @Then ( "I edit my preferred name field" )
     public void editNickname () {
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.name( "preferredName" ) ) );
         final WebElement prefName = driver.findElement( By.id( "preferredName" ) );
         prefName.clear();
         prefName.sendKeys( "newNickname" );
