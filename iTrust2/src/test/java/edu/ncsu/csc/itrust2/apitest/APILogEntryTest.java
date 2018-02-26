@@ -78,8 +78,6 @@ public class APILogEntryTest {
     public void testGetEntriesUser () throws Exception {
         mvc.perform( get( "/api/v1/logentriesuser" ) ).andExpect( status().isOk() )
                 .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
-        mvc.perform( get( "/api/v1/logentriesaccrole" ) ).andExpect( status().isOk() )
-                .andExpect( content().contentType( MediaType.APPLICATION_JSON_UTF8_VALUE ) );
 
     }
 

@@ -42,6 +42,7 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  * Step definitions for the BBT feature file.
  *
  * @author Natalie Landsberg
+ * @author Hannah Morrison
  *
  */
 public class BBTStepDefs {
@@ -58,7 +59,7 @@ public class BBTStepDefs {
 
         ChromeDriverManager.getInstance().setup();
         final ChromeOptions options = new ChromeOptions();
-        options.addArguments( "headless" );
+        // options.addArguments( "headless" );
         options.addArguments( "window-size=1200x600" );
         options.addArguments( "blink-settings=imagesEnabled=false" );
         driver = new ChromeDriver( options );
@@ -330,7 +331,6 @@ public class BBTStepDefs {
     @When ( "I go to the Request Appointment page" )
     public void navReqAppt () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('requestappointment').click();" );
-        // assertTrue( true );
     }
 
     @When ( "I fill in values for the Appointment Request Fields" )
@@ -587,7 +587,12 @@ public class BBTStepDefs {
 
     @When ( "I go to the Add User page" )
     public void navAddUser () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/addUser" );
+        }
     }
 
     @When ( "I fill in values in the Add User form with (.+) and (.+)" )
@@ -679,7 +684,12 @@ public class BBTStepDefs {
 
     @When ( "I go to the access log page" )
     public void goToAccessLogPage () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        try {
+            ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('viewLogs').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/activitylog" );
+        }
     }
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
@@ -729,11 +739,18 @@ public class BBTStepDefs {
 
     @Then ( "I view my demographics" )
     public void viewDemos () {
-        ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('editdemographics-patient').click();" );
+        try {
+            ( (JavascriptExecutor) driver )
+                    .executeScript( "document.getElementById('editdemographics-patient').click();" );
+        }
+        catch ( final Exception e ) {
+            driver.get( "http://localhost:8080/iTrust2/patient/editDemographics" );
+        }
     }
 
     @Then ( "I edit my preferred name field" )
     public void editNickname () {
+        wait.until( ExpectedConditions.visibilityOfElementLocated( By.name( "preferredName" ) ) );
         final WebElement prefName = driver.findElement( By.id( "preferredName" ) );
         prefName.clear();
         prefName.sendKeys( "newNickname" );

@@ -71,7 +71,6 @@ And I sign out of the system
 Given I am able to log in to iTrust as <username> with password <newPassword>
 And I sign out of the system
 Given I am able to log in to iTrust as <username> with password <newPassword>
-And I sign out of the system
 Then I go to the access log page
 Then I view my demographics
 And I edit my preferred name field
@@ -85,7 +84,7 @@ Scenario Outline: User cannot see admin code in access log
 Given The user <username> does not already exist in my database
 When I log in as admin
 When I go to the Add User page
-When I fill in the values in the Add User form with <username> and <password> 
+When I fill in values in the Add User form with <username> and <password> 
 Then The user was created successfully
 And I sign out as admin
 Given I am able to log in to iTrust as <username> with password <password>
