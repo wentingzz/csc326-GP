@@ -29,50 +29,57 @@ When I go to the change password page
 When I fill out the page's form with current password <password> and new password <newPassword>
 Then My password is updated successfully
 And I return to the homepage
-Then I see access logs with 6 log entries
+Then I see access logs with 2 log entries
 Examples:
-	|username   |password|newPassword	|
-	|csc326     |redball	|notredball		|
+	|username   		 |password	|newPassword	|
+	|csc326Logs1     |redball	|notredball	|
 	
 Scenario Outline: View logs within specified range
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the access log page
 When I enter a valid starting date <startdate> and a valid end date <enddate>
-Then I see access logs with 6 log entries
+Then I see access logs with 3 log entries
 Examples:
-	|username	|password	|startdate	|enddate	 	|
-	|csc326		|redball		|02/05/2018	|02/27/2018	|
+	|username		|password		|startdate	|enddate	 	|
+	|csc326Logs1		|redball			|02/05/2018	|02/27/2018	|
 	
 Scenario Outline: View logs with invalid range
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the access log page
 When I enter a valid starting date <startdate> and a valid end date <enddate>
 Then I do not see any log entries
-And I see an option to re-select the range of dates
 Examples:
 	|username	|password	|startdate	|enddate	 |
 	|csc326		|redball		|02/02/2020	|02/05/2018|
 	
-Scenario Outline: View more than 10 logs
+Scenario Outline: View only 10 logs
 Given I am able to log in to iTrust as <username> with password <password>
 When I go to the change password page
 When I fill out the page's form with current password <password> and new password <newPassword>
 Then My password is updated successfully
 And I sign out of the system
 Given I am able to log in to iTrust as <username> with password <newPassword>
-When I go to the Request Appointment page as a patient
 And I sign out of the system
 Given I am able to log in to iTrust as <username> with password <newPassword>
 And I sign out of the system
 Given I am able to log in to iTrust as <username> with password <newPassword>
+And I sign out of the system
+Given I am able to log in to iTrust as <username> with password <newPassword>
+And I sign out of the system
+Given I am able to log in to iTrust as <username> with password <newPassword>
+And I sign out of the system
+Given I am able to log in to iTrust as <username> with password <newPassword>
+And I sign out of the system
+Given I am able to log in to iTrust as <username> with password <newPassword>
+And I sign out of the system
 Then I go to the access log page
 Then I view my demographics
 And I edit my preferred name field
 Then I return to the homepage
-And I see 10 log entries
+And I see access logs with 10 log entries
 Examples:
-	|username	|password	|newPassword |
-	|csc326		|redball		|yellowball  |
+	|username		|password	|newPassword |
+	|csc326Logs2		|redball		|yellowball  |
 	
 Scenario Outline: User cannot see admin code in access log
 Given The user <username> does not already exist in my database

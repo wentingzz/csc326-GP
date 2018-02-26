@@ -184,6 +184,32 @@ public class HibernateDataGenerator {
         csc326Birth.add( Calendar.YEAR, -13 );
         csc326.setDateOfBirth( csc326Birth );
         csc326.save();
+
+        final Patient csc326Logs1 = new Patient();
+        csc326Logs1.setFirstName( "csc326Logs1" );
+        final User csc326UserLogs1 = new User( "csc326Logs1",
+                "$2a$10$hOCH0uJlfbR6xzKWPQToXu1RP1/yLAngFXbVKhcnteRIQ1r/bGflm", Role.ROLE_PATIENT, 1 );
+        csc326UserLogs1.save();
+        csc326Logs1.setSelf( csc326UserLogs1 );
+        csc326Logs1.setLastName( "User" );
+        csc326Logs1.setEmail( "csc326s18.203.2@gmail.com" );
+        final Calendar csc326Birth1 = Calendar.getInstance();
+        csc326Birth1.add( Calendar.YEAR, -13 );
+        csc326Logs1.setDateOfBirth( csc326Birth1 );
+        csc326Logs1.save();
+
+        final Patient csc326Logs2 = new Patient();
+        csc326Logs2.setFirstName( "csc326Logs2" );
+        final User csc326UserLogs2 = new User( "csc326Logs2",
+                "$2a$10$hOCH0uJlfbR6xzKWPQToXu1RP1/yLAngFXbVKhcnteRIQ1r/bGflm", Role.ROLE_PATIENT, 1 );
+        csc326UserLogs2.save();
+        csc326Logs2.setSelf( csc326UserLogs2 );
+        csc326Logs2.setLastName( "User" );
+        csc326Logs2.setEmail( "csc326s18.203.2@gmail.com" );
+        final Calendar csc326Birth2 = Calendar.getInstance();
+        csc326Birth2.add( Calendar.YEAR, -13 );
+        csc326Logs2.setDateOfBirth( csc326Birth2 );
+        csc326Logs2.save();
     }
 
     /**

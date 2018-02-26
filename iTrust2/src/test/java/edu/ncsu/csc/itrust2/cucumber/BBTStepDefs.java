@@ -141,9 +141,8 @@ public class BBTStepDefs {
     @Then ( "My password is updated successfully" )
     public void verifyPass () {
         try {
-            // wait.until( ExpectedConditions.textToBePresentInElementLocated(
-            // By.name( "message" ),
-            // "Password changed successfully" ) );
+            wait.until( ExpectedConditions.textToBePresentInElementLocated( By.name( "message" ),
+                    "Password changed successfully" ) );
             assertFalse( driver.getPageSource().contains( "Could not change" ) );
         }
         catch ( final Exception e ) {
@@ -588,8 +587,6 @@ public class BBTStepDefs {
 
     @When ( "I go to the Add User page" )
     public void navAddUser () {
-        // wait.until( ExpectedConditions.visibilityOfElementLocated( By.id(
-        // "date" ) ) );
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('addnewuser').click();" );
     }
 
@@ -637,15 +634,47 @@ public class BBTStepDefs {
 
     }
 
-    @Then ( "I see access logs with 6 log entries" )
-    public void showSixLogs () {
+    @Then ( "I see access logs with (.+) log entries" )
+    public void showSixLogs ( final int numLogs ) {
         // if the log is on the home page, then it will show up in the home
         // page's source
-        // TODO add check for the 4 log entries, maybe get table elements?
         driver.getPageSource().contains( "activitylog" );
         final List<WebElement> tableRows = driver.findElements( By.cssSelector( "tbody > tr" ) );
-        assertTrue( tableRows.size() == 6 );
-
+        assertTrue( tableRows.size() == numLogs );
+        // doesn't work, just generates JS code
+        // final WebElement table_element = driver.findElement( By.id(
+        // "logtable" ) );
+        // final List<WebElement> tr_collection = table_element.findElements(
+        // By.xpath( "id('logtable')/tbody/tr" ) );
+        //
+        // int row_num, col_num;
+        // row_num = 1;
+        // for ( final WebElement trElement : tr_collection ) {
+        // final List<WebElement> td_collection = trElement.findElements(
+        // By.xpath( "td" ) );
+        // System.out.println( "NUMBER OF COLUMNS=" + td_collection.size() );
+        // col_num = 1;
+        // for ( final WebElement tdElement : td_collection ) {
+        // System.out.println( "row # " + row_num + ", col # " + col_num +
+        // "text=" + tdElement.getText() );
+        // assertTrue( tdElement.getText().contains( "LOGIN_SUCCESS" )
+        // || tdElement.getText().contains( "PASSWORD_UPDATE_SUCCESS" )
+        // || tdElement.getText().contains( "EDIT_DEMOGRAPHICS" )
+        // || tdElement.getText().contains( "VIEW_DEMOGRAPHICS" )
+        // || tdElement.getText().contains( "APPOINTMENT_REQUEST_VIEWED" )
+        // || tdElement.getText().contains( "APPOINTMENT_REQUEST_SUBMITTED" ) );
+        //
+        // col_num++;
+        // }
+        // row_num++;
+        // }
+        // try {
+        // Thread.sleep( 500000 );
+        // }
+        // catch ( final InterruptedException e ) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
     }
 
     @When ( "I go to the access log page" )
@@ -655,7 +684,6 @@ public class BBTStepDefs {
 
     @When ( "I enter a valid starting date (.+) and a valid end date (.+)" )
     public void enterDates ( final String startDate, final String endDate ) {
-        // TODO
         final WebElement from = driver.findElement( By.name( "startdate" ) );
         final String startMonth = startDate.substring( 0, 2 );
         final String startDay = startDate.substring( 3, 5 );
@@ -671,7 +699,6 @@ public class BBTStepDefs {
 
     @When ( "I enter an invalid starting date (.+) and a valid end date (.+)" )
     public void enterInvalidDates ( final String startDate, final String endDate ) {
-        // TODO
         final WebElement from = driver.findElement( By.name( "startdate" ) );
         final String startMonth = startDate.substring( 0, 2 );
         final String startDay = startDate.substring( 3, 5 );
@@ -694,14 +721,6 @@ public class BBTStepDefs {
 
     }
 
-    @Then ( "I see an option to re-select the range of dates" )
-    public void reselectDates () {
-        // not sure if this is an adequate test;
-        // it wouldn't display log entries if the range isn't correct
-        assertTrue( driver.getPageSource().contains( "Unable to display log entries" ) );
-
-    }
-
     @Then ( "I sign out of the system" )
     public void signOut () {
         final WebElement logout = driver.findElement( By.id( "logout" ) );
@@ -718,6 +737,8 @@ public class BBTStepDefs {
         final WebElement prefName = driver.findElement( By.id( "preferredName" ) );
         prefName.clear();
         prefName.sendKeys( "newNickname" );
+        final WebElement submit = driver.findElement( By.className( "btn" ) );
+        submit.click();
     }
 
 }
